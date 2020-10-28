@@ -35,23 +35,9 @@ module Astronomia
           raise Errors::InvalidArgumentError
         end
 
-        footer = Discordrb::Webhooks::EmbedFooter.new text: event.message.user.username,
-                                                      icon_url: event.message.user.avatar_url
-
-        embed = Discordrb::Webhooks::Embed.new title: horoscope.zodiac_sign.capitalize,
-                                               description: horoscope.description,
-                                               footer: footer,
-                                               color: "#4ecdc4"
-
-        embed.add_field name: "Compatibility", value: horoscope.compatibility, inline: true
-        embed.add_field name: "Mood", value: horoscope.mood, inline: true
-        embed.add_field name: "Lucky number", value: horoscope.lucky_number, inline: true
-
-        matches = api.matches_for_zodiac_sign horoscope.compatibility.downcase
-
-        unless matches.empty?
-          embed.add_field name: "Matches", value: (matches.map do |id| "<@#{id}>" end .join ", ")
-        end
+        embed = horoscope.to_embed api
+        embed.footer = Discordrb::Webhooks::EmbedFooter.new text: event.message.user.username,
+                                                            icon_url: event.message.user.avatar_url
 
         event.channel.send_message(nil, nil, embed)
 
