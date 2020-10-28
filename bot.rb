@@ -47,6 +47,12 @@ module Astronomia
         embed.add_field name: "Mood", value: horoscope.mood, inline: true
         embed.add_field name: "Lucky number", value: horoscope.lucky_number, inline: true
 
+        matches = api.matches_for_zodiac_sign horoscope.compatibility.downcase
+
+        unless matches.empty?
+          embed.add_field name: "Matches", value: (matches.map do |id| "<@#{id}>" end .join ", ")
+        end
+
         event.channel.send_message(nil, nil, embed)
 
       rescue StandardError => error

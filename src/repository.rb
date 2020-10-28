@@ -18,7 +18,11 @@ module Astronomia
       raise Errors::UserZodiacMissingError if zodiac_sign.empty?
 
       # It's wrapped in [[ "sign" ]] due to sqlite library design
-      zodiac_sign.first&.first
+      zodiac_sign.flatten.first
+    end
+
+    def find_users_by_zodiac_sign zodiac_sign
+      @database.execute("select user_id from users where zodiac_sign = ? limit 1", [zodiac_sign]).flatten
     end
 
     def register_user user_id, zodiac_sign

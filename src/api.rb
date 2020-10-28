@@ -16,6 +16,12 @@ module Astronomia
                                             .parsed_response
     end
 
+    def matches_for_zodiac_sign zodiac_sign
+      raise Errors::InvalidZodiacSignError unless Horoscope.is_valid_zodiac? zodiac_sign
+
+      @repository.find_users_by_zodiac_sign zodiac_sign
+    end
+
     def horoscope_for_user user_id
       horoscope_for_zodiac_sign @repository.find_user_zodiac_sign user_id
     end
