@@ -11,7 +11,7 @@ module Astronomia
     if content.start_with? "+horoscope"
       arguments = content.split(" ").drop(1)
 
-      raise Errors::InvalidArgumentsError if arguments.length > 2
+      raise Errors::InvalidArgumentError if arguments.length > 2
 
       begin
         # +horoscope -- for users with registered zodiac sign
@@ -19,20 +19,44 @@ module Astronomia
           horoscope = api.horoscope_for_user event.author.id
 
         # +horoscope register
-        elsif arguments[0] == "register" and Horoscope.is_valid_zodiac? arguments[1]
+        elsif arguments[0] == "register"
+          raise Errors::InvalidZodiacSignError unless Horoscope.is_valid_zodiac? arguments[1]
+
           horoscope = api.register_user event.author.id, arguments[1]
 
         # +horoscope aries
-        elsif Horoscope.is_valid_zodiac? arguments[0]
+        elsif arguments.length == 1
+          raise Errors::InvalidZodiacSignError unless Horoscope.is_valid_zodiac? arguments[0]
+
           horoscope = api.horoscope_for_zodiac_sign arguments[0]
 
         # Invalid usage
         else
-          raise Errors::InvalidArgumentsError
+          raise Errors::InvalidArgumentError
         end
-      end
 
-      horoscope.inspect
+        footer = Discordrb::Webhooks::EmbedFooter.new text: event.message.user.username,
+                                                      icon_url: event.message.user.avatar_url
+
+        embed = Discordrb::Webhooks::Embed.new title: horoscope.zodiac_sign.capitalize,
+                                               description: horoscope.description,
+                                               footer: footer,
+                                               color: "#4ecdc4"
+
+        embed.add_field name: "Compatibility", value: horoscope.compatibility, inline: true
+        embed.add_field name: "Mood", value: horoscope.mood, inline: true
+        embed.add_field name: "Lucky number", value: horoscope.lucky_number, inline: true
+
+        event.channel.send_message(nil, nil, embed)
+
+      rescue StandardError => error
+        embed = Discordrb::Webhooks::Embed.new title: "Ah snap!",
+                                               description: error.message,
+                                               color: "#ff6b6b"
+
+        embed.add_field name: "Error type", value: "`#{error.class.to_s}`"
+        event.channel.send_message(nil, nil, embed)
+      end
     end
   end
 

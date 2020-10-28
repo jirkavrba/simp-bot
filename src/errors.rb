@@ -19,7 +19,7 @@ module Astronomia
       end
     end
 
-    class InvalidArgumentsError < StandardError
+    class InvalidArgumentError < StandardError
       def message
         """
           The command was called with an invalid number of arguments.
@@ -32,11 +32,11 @@ module Astronomia
       end
     end
 
-    class InvalidZodiacError < StandardError
+    class InvalidZodiacSignError < StandardError
       def message
         """
           The given zodiac sign is invalid.
-          Available signs are: #{Horoscope::ZODIAC_SIGNS.join " "}
+          Available signs are: `#{Horoscope::ZODIAC_SIGNS.join "` `"}`
         """
       end
     end
