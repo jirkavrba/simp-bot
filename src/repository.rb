@@ -22,7 +22,7 @@ module Astronomia
     end
 
     def find_users_by_zodiac_sign zodiac_sign
-      @database.execute("select user_id from users where zodiac_sign = ? limit 1", [zodiac_sign]).flatten
+      @database.execute("select user_id from users where zodiac_sign = ?", [zodiac_sign]).flatten
     end
 
     def register_user user_id, zodiac_sign
