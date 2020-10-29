@@ -45,8 +45,6 @@ module Astronomia
       embed.add_field name: "Friendship: " + friendship, value: matches(api, friendship)
       embed.add_field name: "Career: " + career, value: matches(api, career)
 
-      p embed
-
       embed
     end
 

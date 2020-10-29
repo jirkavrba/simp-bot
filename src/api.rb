@@ -17,7 +17,7 @@ module Astronomia
         response = HTTParty.get(API_URL + zodiac_sign)
         parsed = Nokogiri::HTML(response.body)
 
-        p Horoscope.new(
+        Horoscope.new(
             zodiac_sign,
             'https://www.horoscope.com/' + parsed.xpath('/html/body/div[1]/div[3]/main/div/div/div[2]/img').first['src'],
             {
