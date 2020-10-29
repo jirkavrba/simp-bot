@@ -26,9 +26,9 @@ module Astronomia
     end
 
     def register_user user_id, zodiac_sign
-      record = find_user_zodiac_sign user_id
-
-      if record.empty?
+      begin
+        find_user_zodiac_sign user_id
+      rescue Errors::UserZodiacMissingError
         @database.execute("insert into users (user_id, zodiac_sign) values (?, ?)", [user_id, zodiac_sign])
       else
         @database.execute("update users set zodiac_sign = ? where user_id = ?", [zodiac_sign, user_id])
