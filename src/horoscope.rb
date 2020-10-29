@@ -28,8 +28,11 @@ module Astronomia
     end
 
     def to_embed api
+      image = Discordrb::Webhooks::EmbedThumbnail.new url: "https://www.horoscope.com/images-US/signs/#{self.zodiac_sign}.png"
+
       embed = Discordrb::Webhooks::Embed.new title: self.zodiac_sign.capitalize,
                                              description: self.description,
+                                             thumbnail: image,
                                              color: "#4ecdc4"
 
       embed.add_field name: "Compatibility", value: self.compatibility, inline: true
