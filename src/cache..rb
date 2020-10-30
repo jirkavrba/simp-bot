@@ -6,7 +6,7 @@ module Astronomia
       @storage = {}
     end
 
-    def entry zodiac_sign, &block
+    def entry(zodiac_sign, &block)
       if @storage.has_key? zodiac_sign and is_still_valid? @storage[zodiac_sign]
         @storage[zodiac_sign].value
       else
@@ -19,7 +19,7 @@ module Astronomia
 
     private
 
-    def is_still_valid? entry
+    def is_still_valid?(entry)
       entry.inserted_at == today_date
     end
 

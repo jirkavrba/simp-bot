@@ -3,14 +3,14 @@ require 'nokogiri'
 
 module Astronomia
   class Api
-    API_URL = "https://www.horoscope.com/star-ratings/today/"
+    API_URL = 'https://www.horoscope.com/star-ratings/today/'
 
     def initialize
       @repository = Repository.new
       @cache = HoroscopeCache.new
     end
 
-    def horoscope_for_zodiac_sign zodiac_sign
+    def horoscope_for_zodiac_sign(zodiac_sign)
       raise Errors::InvalidZodiacSignError unless Horoscope.is_valid_zodiac? zodiac_sign
 
       @cache.entry zodiac_sign do
@@ -43,7 +43,7 @@ module Astronomia
       end
     end
 
-    def matches_for_zodiac_sign zodiac_sign
+    def matches_for_zodiac_sign(zodiac_sign)
       raise Errors::InvalidZodiacSignError unless Horoscope.is_valid_zodiac? zodiac_sign
 
       @repository.find_users_by_zodiac_sign(zodiac_sign)
@@ -51,11 +51,11 @@ module Astronomia
           .take(5)
     end
 
-    def horoscope_for_user user_id
+    def horoscope_for_user(user_id)
       horoscope_for_zodiac_sign @repository.find_user_zodiac_sign user_id
     end
 
-    def register_user user_id, zodiac_sign
+    def register_user(user_id, zodiac_sign)
       @repository.register_user user_id, zodiac_sign
       horoscope_for_zodiac_sign zodiac_sign
     end

@@ -12,7 +12,7 @@ module Astronomia
       SQL
     end
 
-    def find_user_zodiac_sign user_id
+    def find_user_zodiac_sign(user_id)
       zodiac_sign = @database.execute("select zodiac_sign from users where user_id = ? limit 1", [user_id])
 
       raise Errors::UserZodiacMissingError if zodiac_sign.empty?
@@ -21,11 +21,11 @@ module Astronomia
       zodiac_sign.flatten.first
     end
 
-    def find_users_by_zodiac_sign zodiac_sign
+    def find_users_by_zodiac_sign(zodiac_sign)
       @database.execute("select user_id from users where zodiac_sign = ?", [zodiac_sign]).flatten
     end
 
-    def register_user user_id, zodiac_sign
+    def register_user(user_id, zodiac_sign)
       begin
         find_user_zodiac_sign user_id
       rescue Errors::UserZodiacMissingError
