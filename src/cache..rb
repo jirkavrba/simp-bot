@@ -11,7 +11,7 @@ module Astronomia
         @storage[zodiac_sign].value
       else
         value = block.call
-        @storage[zodiac_sign] = CacheEntry.new value, Date.today
+        @storage[zodiac_sign] = CacheEntry.new value, today_date
 
         value
       end
@@ -20,7 +20,12 @@ module Astronomia
     private
 
     def is_still_valid? entry
-      entry.inserted_at == Time.now.utc.to_date
+      entry.inserted_at == today_date
+    end
+
+    def today_date
+      time = Time.now.utc + Time.zone_offset("PDT")
+      time.to_date
     end
   end
 end
