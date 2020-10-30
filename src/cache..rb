@@ -20,7 +20,7 @@ module Astronomia
     private
 
     def is_still_valid? entry
-      entry.inserted_at == Date.today
+      entry.inserted_at == Time.now.utc.to_date
     end
   end
 end
