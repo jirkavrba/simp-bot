@@ -26,6 +26,21 @@ module Astronomia
         :pisces
     ]
 
+    COLORS = {
+        aries: '#6F4ECC',
+        taurus: '#CC914E',
+        gemini: '#C4CC4E',
+        cancer: '#80CC4E',
+        leo: '#4ECC5E',
+        virgo: '#4ECCA2',
+        libra: '#4EB3CC',
+        scorpio: '#CC4E4E',
+        sagittarius: '#4E6FCC',
+        capricorn: '#B34ECC',
+        aquarius: '#CC4EA2',
+        pisces: '#CC4E5E'
+    }
+
     def self.is_valid_zodiac?(sign)
       ZODIAC_SIGNS.include? sign.to_sym
     end
@@ -34,7 +49,7 @@ module Astronomia
       image = Discordrb::Webhooks::EmbedThumbnail.new url: "https://www.horoscope.com/images-US/signs/#{zodiac_sign}.png"
       embed = Discordrb::Webhooks::Embed.new title: zodiac_sign.capitalize,
                                              thumbnail: image,
-                                             color: "#4ecdc4"
+                                             color: COLORS[zodiac_sign.to_sym]
 
       embed.add_field name: stars(sex[:stars]) + " | Sex", value: sex[:text]
       embed.add_field name: stars(hustle[:stars]) + " | Hustle", value: hustle[:text]
