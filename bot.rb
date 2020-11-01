@@ -51,16 +51,16 @@ module Astronomia
 
       message = event.channel.send_message(nil, nil, embed)
 
+      # Try to delete the +horoscope message if possible
+      begin
+        event.message.delete
+      rescue Discordrb::Errors::NoPermission => _
+      end
+
       # Delete the message after 2 minutes
       Thread.new do
         sleep 2 * 60
         message.delete
-
-        # And also delete the +horoscope if possible
-        begin
-          event.message.delete
-        rescue Discordrb::Errors::NoPermission => _
-        end
       end
     end
   end
