@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 module Astronomia
-  class CacheEntry < Struct.new(:value, :inserted_at); end
+  CacheEntry = Struct.new(:value, :inserted_at) { ; }
 
   class HoroscopeCache
     def initialize
@@ -7,7 +9,7 @@ module Astronomia
     end
 
     def entry(zodiac_sign, &block)
-      if @storage.has_key? zodiac_sign and is_still_valid? @storage[zodiac_sign]
+      if @storage.key?(zodiac_sign) && is_still_valid?(@storage[zodiac_sign])
         @storage[zodiac_sign].value
       else
         value = block.call
@@ -24,7 +26,7 @@ module Astronomia
     end
 
     def today_date
-      time = Time.now.utc + Time.zone_offset("PDT")
+      time = Time.now.utc + Time.zone_offset('PDT')
       time.to_date
     end
   end

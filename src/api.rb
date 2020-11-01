@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'httparty'
 require 'nokogiri'
 
@@ -18,27 +20,27 @@ module Astronomia
         parsed = Nokogiri::HTML(response.body)
 
         Horoscope.new(
-            zodiac_sign,
-            'https://www.horoscope.com/' + parsed.xpath('/html/body/div[1]/div[3]/main/div/div/div[2]/img').first['src'],
-            {
-                stars: parsed.xpath('count(/html/body/div[1]/div[3]/main/div/h3[1]/i[contains(@class, "highlight")])').to_i,
-                text: parsed.xpath("/html/body/div[1]/div[3]/main/div/p[1]/text()").to_s
-            },
-            {
-                stars: parsed.xpath('count(/html/body/div[1]/div[3]/main/div/h3[2]/i[contains(@class, "highlight")])').to_i,
-                text: parsed.xpath('/html/body/div[1]/div[3]/main/div/p[2]/text()').to_s
-            },
-            {
-                stars: parsed.xpath('count(/html/body/div[1]/div[3]/main/div/h3[3]/i[contains(@class, "highlight")])').to_i,
-                text: parsed.xpath('/html/body/div[1]/div[3]/main/div/p[3]/text()').to_s
-            },
-            {
-                stars: parsed.xpath('count(/html/body/div[1]/div[3]/main/div/h3[4]/i[contains(@class, "highlight")])').to_i,
-                text: parsed.xpath('/html/body/div[1]/div[3]/main/div/p[4]/text()').to_s
-            },
-            parsed.xpath('//*[@id="src-horo-matchlove"]/p/text()').to_s,
-            parsed.xpath('//*[@id="src-horo-matchfriend"]/p/text()').to_s,
-            parsed.xpath('//*[@id="src-horo-matchcareer"]/p/text()').to_s
+          zodiac_sign,
+          "https://www.horoscope.com/#{parsed.xpath('/html/body/div[1]/div[3]/main/div/div/div[2]/img').first['src']}",
+          {
+            stars: parsed.xpath('count(/html/body/div[1]/div[3]/main/div/h3[1]/i[contains(@class, "highlight")])').to_i,
+            text: parsed.xpath('/html/body/div[1]/div[3]/main/div/p[1]/text()').to_s
+          },
+          {
+            stars: parsed.xpath('count(/html/body/div[1]/div[3]/main/div/h3[2]/i[contains(@class, "highlight")])').to_i,
+            text: parsed.xpath('/html/body/div[1]/div[3]/main/div/p[2]/text()').to_s
+          },
+          {
+            stars: parsed.xpath('count(/html/body/div[1]/div[3]/main/div/h3[3]/i[contains(@class, "highlight")])').to_i,
+            text: parsed.xpath('/html/body/div[1]/div[3]/main/div/p[3]/text()').to_s
+          },
+          {
+            stars: parsed.xpath('count(/html/body/div[1]/div[3]/main/div/h3[4]/i[contains(@class, "highlight")])').to_i,
+            text: parsed.xpath('/html/body/div[1]/div[3]/main/div/p[4]/text()').to_s
+          },
+          parsed.xpath('//*[@id="src-horo-matchlove"]/p/text()').to_s,
+          parsed.xpath('//*[@id="src-horo-matchfriend"]/p/text()').to_s,
+          parsed.xpath('//*[@id="src-horo-matchcareer"]/p/text()').to_s
         )
       end
     end
@@ -47,8 +49,8 @@ module Astronomia
       raise Errors::InvalidZodiacSignError unless Horoscope.is_valid_zodiac? zodiac_sign
 
       @repository.find_users_by_zodiac_sign(zodiac_sign)
-          .shuffle
-          .take(5)
+                 .shuffle
+                 .take(5)
     end
 
     def horoscope_for_user(user_id)
