@@ -35,7 +35,7 @@ module SimpBot
           boomers = @repository.get_top_ten_boomers.to_h
 
           embed.title = "Top 10 boomers"
-          embed.description = boomers.each_with_index.map { |data, index| "**#{index}**: <@#{data[0]}> posted #{data[1]} gifs" }.join "\n"
+          embed.description = boomers.each_with_index.map { |data, index| "**#{index + 1}**: <@#{data[0]}> posted #{data[1]} gifs" }.join "\n"
           # Only contains mentions
         elsif arguments.size == event.message.mentions.size
           counts = event.message.mentions.map { |mention| [mention.id, @repository.get_gifs_count(mention.id)] }.to_h
