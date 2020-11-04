@@ -8,12 +8,13 @@ module SimpBot
   repository = SimpBot::Repository.new
 
   handlers = [
-      SimpBot::Horoscope::MessageHandler.new(repository)
+    SimpBot::Boomers::MessageHandler.new(repository),
+    SimpBot::Horoscope::MessageHandler.new(repository)
   ]
 
-  bot.message do |event|
-    handlers.each do |handler| handler.handle_message event end
-  end
+  bot.message do |event| handlers.each { |handler| handler.handle_message event } end
+  bot.message_edit do |event| handlers.each { |handler| handler.handle_message event } end
+
 
   bot.run
 end
