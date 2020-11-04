@@ -7,4 +7,4 @@ Bundler.setup :default
 require_all 'src'
 
 # Validate that there is a token present in the environment variables
-raise Astronomia::Errors::TokenNotSetupError if ENV["DISCORD_TOKEN"].nil?
+raise SimpBot::Errors::TokenNotSetupError if ENV["DISCORD_TOKEN"].nil?
