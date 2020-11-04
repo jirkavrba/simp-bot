@@ -17,7 +17,7 @@ module SimpBot
       end
 
       def increment_gifs_count(user_id)
-        @database.execute('insert or ignore into boomers (user_id, gifs_count) values (?, 0)', [user_id])
+        get_gifs_count user_id
         @database.execute('update boomers set gifs_count = (gifs_count + 1) where user_id = ?', [user_id])
       end
     end
