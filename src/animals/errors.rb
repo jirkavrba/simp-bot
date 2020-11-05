@@ -1,11 +1,15 @@
 module SimpBot
-  module Cats
+  module Animals
     module Errors
       class ApiTokenNotSetup < StandardError
+        def initialize(variable)
+          @variable = variable
+        end
+
         def message
           ''"
             Cats api key couldn't be found in environmental variables.
-            Please make sure that the CATS_API_KEY variable is correctly set up.
+            Please make sure that the #{@variable} variable is correctly set up.
           "''
         end
       end
