@@ -21,7 +21,14 @@ module SimpBot
               url: "https://random.dog/woof.json",
               headers: {},
               title: "Woof!",
-              extract: -> (json) do p json; json["url"] end
+              extract: -> (json) do json["url"] end
+          },
+          {
+              commands: ["+fox"],
+              url: "https://randomfox.ca/floof/",
+              headers: {},
+              title: "What does the fox say?",
+              extract: -> (json) do json["image"] end
           }
       ]
 
