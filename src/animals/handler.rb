@@ -6,7 +6,7 @@ module SimpBot
 
       ENDPOINTS = [
           {
-              commands: ["+cat", "+pussy"],
+              commands: ["+cat", "+catto" "+pussy"],
               url: "https://api.thecatapi.com/v1/images/search",
               headers: {
                   "x-api-key" => ENV.fetch("CATS_API_KEY") {
@@ -29,6 +29,13 @@ module SimpBot
               headers: {},
               title: "What does the fox say?",
               extract: -> (json) do json["image"] end
+          },
+          {
+              commands: ["+duck", "+quack"],
+              url: "https://random-d.uk/api/v1/random?type=png",
+              headers: {},
+              title: "Quack!",
+              extract: -> (json) do json["url"] end
           }
       ]
 
