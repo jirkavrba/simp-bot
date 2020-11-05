@@ -15,6 +15,13 @@ module SimpBot
               },
               title: "Meow!",
               extract: -> (json) do json[0]["url"] end
+          },
+          {
+              commands: ["+dog", "+doggo"],
+              url: "https://random.dog/woof.json",
+              headers: {},
+              title: "Woof!",
+              extract: -> (json) do p json; json["url"] end
           }
       ]
 
@@ -27,15 +34,20 @@ module SimpBot
 
         unless endpoint.nil?
           response = HTTParty.get(endpoint[:url], headers: endpoint[:headers] || []).parsed_response
+          image = endpoint[:extract].call(response)
 
           embed = Discordrb::Webhooks::Embed.new
 
           embed.title = endpoint[:title]
-          embed.image = Discordrb::Webhooks::EmbedImage.new url: endpoint[:extract].call(response)
           embed.timestamp = event.timestamp
           embed.footer = Discordrb::Webhooks::EmbedFooter.new text: event.message.user.username,
                                                               icon_url: event.message.user.avatar_url
 
+          if [".mp4", ".webm"].any? do |format| image.end_with? format end
+            embed.description = image
+          else
+            embed.image = Discordrb::Webhooks::EmbedImage.new url: image
+          end
 
           event.channel.send_message(nil, nil, embed)
         end
