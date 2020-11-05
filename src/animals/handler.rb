@@ -6,7 +6,7 @@ module SimpBot
 
       ENDPOINTS = [
           {
-              commands: ["+cat", "+catto" "+pussy"],
+              commands: ["+cat", "+catto", "+pussy"],
               url: "https://api.thecatapi.com/v1/images/search",
               headers: {
                   "x-api-key" => ENV.fetch("CATS_API_KEY") {
