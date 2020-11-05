@@ -9,6 +9,7 @@ module SimpBot
 
   handlers = [
     SimpBot::Boomers::MessageHandler.new(repository),
+    SimpBot::Cats::MessageHandler.new(repository),
     SimpBot::Horoscope::MessageHandler.new(repository)
   ]
 
