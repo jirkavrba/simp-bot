@@ -24,7 +24,7 @@ module SimpBot
               extract: -> (json) do json["url"] end
           },
           {
-              commands: ["+fox"],
+              commands: ["+fox", "+foxxo"],
               url: "https://randomfox.ca/floof/",
               headers: {},
               title: "What does the fox say?",
