@@ -51,9 +51,14 @@ module SimpBot
       {
         commands: ["+sloth"],
         url: "https://sloth.pics/api",
-        headers: {},
         title: "Man, this API is kinda sloooow",
         extract: ->(json) { json["url"] }
+      },
+      {
+        commands: %w[+cheems +doge],
+        url: "http://shibe.online/api/shibes?count=1&urls=true",
+        title: "Much picture, such wow",
+        extract: ->(json) { json[0] }
       }
     ]
   end

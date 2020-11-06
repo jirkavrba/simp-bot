@@ -3,7 +3,7 @@
 require "sqlite3"
 
 module SimpBot
-  class Repository < Singleton
+  class Repository
     include Boomers::RepositoryMethods
     include Horoscope::RepositoryMethods
 
