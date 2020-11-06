@@ -1,10 +1,10 @@
-require 'bundler/setup'
-require 'require_all'
+require "bundler/setup"
+require "require_all"
 
 Bundler.setup :default
 
 # Autoload the whole /src folder
-require_all 'src'
+require_all "src"
 
 # Validate that there is a token present in the environment variables
 raise SimpBot::Errors::TokenNotSetupError if ENV["DISCORD_TOKEN"].nil?

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'discordrb'
-require_relative 'src/setup'
+require "discordrb"
+require_relative "src/setup"
 
 module SimpBot
-  bot = Discordrb::Bot.new token: ENV['DISCORD_TOKEN'], ignore_bots: true
+  bot = Discordrb::Bot.new token: ENV["DISCORD_TOKEN"], ignore_bots: true
   repository = SimpBot::Repository.new
 
   handlers = [
@@ -14,9 +14,8 @@ module SimpBot
     SimpBot::Horoscope::MessageHandler.new(repository)
   ]
 
-  bot.message do |event| handlers.each { |handler| handler.handle_message event } end
-  bot.message_edit do |event| handlers.each { |handler| handler.handle_message event } end
-
+  bot.message { |event| handlers.each { |handler| handler.handle_message event } }
+  bot.message_edit { |event| handlers.each { |handler| handler.handle_message event } }
 
   bot.run
 end

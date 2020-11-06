@@ -1,4 +1,4 @@
-require_relative '../handler'
+require_relative "../handler"
 
 module SimpBot
   module Horoscope
@@ -8,8 +8,8 @@ module SimpBot
 
         content = event.message.content
 
-        if content.start_with? '+horoscope'
-          arguments = content.split(' ').drop(1)
+        if content.start_with? "+horoscope"
+          arguments = content.split(" ").drop(1)
 
           raise Errors::InvalidArgumentError if arguments.length > 2
 
@@ -19,7 +19,7 @@ module SimpBot
               horoscope = @api.horoscope_for_user event.author.id
 
               # +horoscope register
-            elsif arguments[0] == 'register'
+            elsif arguments[0] == "register"
               raise Errors::InvalidZodiacSignError unless Horoscope.is_valid_zodiac? arguments[1]
 
               horoscope = @api.register_user event.author.id, arguments[1]
@@ -55,7 +55,7 @@ module SimpBot
               sleep 2 * 60
               message.delete
             end
-          rescue StandardError => error
+          rescue => error
             handle_error event, error
           end
         end

@@ -1,4 +1,4 @@
-require_relative '../handler'
+require_relative "../handler"
 
 module SimpBot
   module Facts
@@ -10,7 +10,7 @@ module SimpBot
 
       def handle_message(event)
         if event.message.content == "+fact"
-          fact =  @api.random_fact
+          fact = @api.random_fact
 
           embed = Discordrb::Webhooks::Embed.new
 

@@ -27,7 +27,7 @@ module SimpBot
       end
 
       def today_date
-        time = Time.now.utc + Time.zone_offset('PDT')
+        time = Time.now.utc + Time.zone_offset("PDT")
         time.to_date
       end
     end

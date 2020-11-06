@@ -9,12 +9,12 @@ module SimpBot
     end
 
     def handle_error(event, error)
-      embed = Discordrb::Webhooks::Embed.new title: 'Ah snap!',
+      embed = Discordrb::Webhooks::Embed.new title: "Ah snap!",
                                              description: error.message,
-                                             color: '#ff6b6b'
+                                             color: "#ff6b6b"
 
-      embed.add_field name: 'Error type', value: "`#{error.class}`"
-      embed.add_field name: 'Backtrace', value: "```#{error.backtrace&.join "\n"}```" if ENV.fetch("DEVELOPMENT") { false }
+      embed.add_field name: "Error type", value: "`#{error.class}`"
+      embed.add_field name: "Backtrace", value: "```#{error.backtrace&.join "\n"}```" if ENV.fetch("DEVELOPMENT", false)
       embed.footer = Discordrb::Webhooks::EmbedFooter.new text: event.message.user.username,
                                                           icon_url: event.message.user.avatar_url
 

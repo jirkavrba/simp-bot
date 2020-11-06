@@ -1,4 +1,4 @@
-require_relative '../handler'
+require_relative "../handler"
 
 module SimpBot
   module Boomers
@@ -16,14 +16,13 @@ module SimpBot
       end
 
       def is_gif?(event)
-        %w(tenor.com giphy.com imgur gfycat).any? do |pattern| event.content.include? pattern end
+        %w[tenor.com giphy.com imgur gfycat].any? { |pattern| event.content.include? pattern }
       end
 
       def handle_command(event)
-
         content = event.message.content
 
-        arguments = content.split(' ').drop(1)
+        arguments = content.split(" ").drop(1)
 
         embed = Discordrb::Webhooks::Embed.new
 
@@ -40,7 +39,7 @@ module SimpBot
         elsif arguments.size == event.message.mentions.size
           counts = event.message.mentions.map { |mention| [mention.id, @repository.get_gifs_count(mention.id)] }.to_h
 
-          embed.title = 'Boomer check'
+          embed.title = "Boomer check"
           embed.description = counts.map { |id, count| "<@#{id}> posted **#{count}** gifs." }.join "\n"
         end
 

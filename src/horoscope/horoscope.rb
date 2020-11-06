@@ -3,44 +3,44 @@
 module SimpBot
   module Horoscope
     Horoscope = Struct.new(
-        :zodiac_sign,
-        :emoji,
-        :sex,
-        :hustle,
-        :vibe,
-        :success,
-        :love,
-        :friendship,
-        :career
-    ) do
+      :zodiac_sign,
+      :emoji,
+      :sex,
+      :hustle,
+      :vibe,
+      :success,
+      :love,
+      :friendship,
+      :career
+    ) {
       ZODIAC_SIGNS = %i[
-      aries
-      taurus
-      gemini
-      cancer
-      leo
-      virgo
-      libra
-      scorpio
-      sagittarius
-      capricorn
-      aquarius
-      pisces
-    ].freeze
+        aries
+        taurus
+        gemini
+        cancer
+        leo
+        virgo
+        libra
+        scorpio
+        sagittarius
+        capricorn
+        aquarius
+        pisces
+      ].freeze
 
       COLORS = {
-          aries: '#6F4ECC',
-          taurus: '#CC914E',
-          gemini: '#C4CC4E',
-          cancer: '#80CC4E',
-          leo: '#4ECC5E',
-          virgo: '#4ECCA2',
-          libra: '#4EB3CC',
-          scorpio: '#CC4E4E',
-          sagittarius: '#4E6FCC',
-          capricorn: '#B34ECC',
-          aquarius: '#CC4EA2',
-          pisces: '#CC4E5E'
+        aries: "#6F4ECC",
+        taurus: "#CC914E",
+        gemini: "#C4CC4E",
+        cancer: "#80CC4E",
+        leo: "#4ECC5E",
+        virgo: "#4ECCA2",
+        libra: "#4EB3CC",
+        scorpio: "#CC4E4E",
+        sagittarius: "#4E6FCC",
+        capricorn: "#B34ECC",
+        aquarius: "#CC4EA2",
+        pisces: "#CC4E5E"
       }.freeze
 
       def self.is_valid_zodiac?(sign)
@@ -68,19 +68,19 @@ module SimpBot
       private
 
       def stars(count)
-        '★' * count +
-        '☆' * (5 - count)
+        "★" * count +
+          "☆" * (5 - count)
       end
 
       def matches(api, zodiac_sign)
         matches = api.matches_for_zodiac_sign zodiac_sign.downcase
 
         if matches.empty?
-          'No matches'
+          "No matches"
         else
-          matches.map { |id| "<@#{id}>" }.join(', ')
+          matches.map { |id| "<@#{id}>" }.join(", ")
         end
       end
-    end
+    }
   end
 end
