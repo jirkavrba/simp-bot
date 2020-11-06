@@ -3,6 +3,11 @@ require_relative "../handler"
 module SimpBot
   module Horoscope
     class MessageHandler < SimpBot::MessageHandlerBase
+
+      def initialize(repository)
+        @repository = repository
+      end
+
       def handle_message(event)
         @api ||= Api.new @repository
 

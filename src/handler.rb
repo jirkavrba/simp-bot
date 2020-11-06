@@ -1,9 +1,5 @@
 module SimpBot
   class MessageHandlerBase
-    def initialize(repository)
-      @repository = repository
-    end
-
     def handle_message(event)
       # This will be overridden by child classes
     end

@@ -3,6 +3,11 @@ require_relative "../handler"
 module SimpBot
   module Boomers
     class MessageHandler < SimpBot::MessageHandlerBase
+
+      def initialize(repository)
+        @repository = repository
+      end
+
       def handle_message(event)
         handle_command(event) if is_command?(event)
 

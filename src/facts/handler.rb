@@ -3,8 +3,7 @@ require_relative "../handler"
 module SimpBot
   module Facts
     class MessageHandler < MessageHandlerBase
-      def initialize(repository)
-        super repository
+      def initialize
         @api = Facts::Api.new
       end
 

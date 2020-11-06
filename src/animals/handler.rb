@@ -4,10 +4,6 @@ module SimpBot
   module Animals
     class MessageHandler < MessageHandlerBase
 
-      def initialize(repository)
-        super repository
-      end
-
       def handle_message(event)
         endpoint = Animals::ENDPOINTS.find { |endpoint|
           endpoint[:commands].include? event.message.content

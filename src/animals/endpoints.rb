@@ -54,7 +54,7 @@ module SimpBot
         headers: {},
         title: "Man, this API is kinda sloooow",
         extract: ->(json) { json["url"] }
-      },
+      }
     ]
   end
 end
