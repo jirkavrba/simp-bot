@@ -59,6 +59,12 @@ module SimpBot
         url: "http://shibe.online/api/shibes?count=1&urls=true",
         title: "Much picture, such wow",
         extract: ->(json) { json[0] }
+      },
+      {
+        commands: ["+turtle"],
+        url: "https://zelva.vrba.dev/api.php",
+        title: "Tortl",
+        extract: ->(json) { json["url"] }
       }
     ]
   end
