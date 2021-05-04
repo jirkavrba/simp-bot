@@ -3,6 +3,8 @@ defmodule Simp.Animals.AnimalApi do
   A common behaviour for animal API endpoints (eg. catapi, api for sloth pics, ...)
   """
 
+  @type t :: __MODULE__
+
   @doc "Command Aliases"
   @callback aliases() :: [String.t()]
 
