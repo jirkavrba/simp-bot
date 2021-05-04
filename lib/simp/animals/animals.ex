@@ -12,7 +12,7 @@ defmodule Simp.Animals.Animals do
   ]
 
   @impl true
-  def usage, do: ["test"]
+  def usage, do: ["pls gib catto"]
 
   @impl true
   def description, do: "Milking the shit out of public animal APIs"
@@ -24,9 +24,7 @@ defmodule Simp.Animals.Animals do
   def command(message, args) do
     case args do
       [endpoint] -> handle_endpoint(message, endpoint)
-      # [endpoint, count] -> send_multiple(message, endpoint, count)
-      [] -> fail(message, "Bruh just choose one of the following:\n**#{list_aliases()}**")
-      _ -> fail(message, "Expected type as first parameter and optionally number as second parameter")
+      _ -> fail(message, "Bruh just choose one of the following:\n**#{list_aliases()}**")
     end
   end
 
