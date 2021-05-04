@@ -1,18 +1,15 @@
 defmodule Simp do
-  @moduledoc """
-  Documentation for `Simp`.
-  """
+  use Application
+  use Supervisor
 
-  @doc """
-  Hello world.
+  @impl Supervisor
+  def init(_) do
+    :ignore
+  end
 
-  ## Examples
-
-      iex> Simp.hello()
-      :world
-
-  """
-  def hello do
-    :world
+  @impl Application
+  def start(_, _) do
+    Supervisor.init([__MODULE__], [])
+    {:ok, self()}
   end
 end
