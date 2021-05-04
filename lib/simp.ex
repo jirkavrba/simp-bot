@@ -4,7 +4,10 @@ defmodule Simp do
 
   @impl Supervisor
   def init(_init_args) do
-    children = [Simp.Consumer]
+    children = [
+      Nosedrum.Storage.ETS,
+      Simp.Consumer
+    ]
 
     Supervisor.init(children, strategy: :one_for_one)
   end

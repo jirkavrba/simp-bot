@@ -8,5 +8,5 @@ if Mix.env() == :production do
     num_shards: :auto
 
   config :nosedrum,
-    prefix: "+"
+    prefix: "pls "
 end
