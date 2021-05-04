@@ -54,13 +54,7 @@ defmodule Simp.Animals.Animals do
     headers = api.headers() || []
 
     case HTTPoison.get(url, headers) do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {
-          :ok,
-          body
-          |> Jason.decode!
-          |> api.extract_image_url()
-        }
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} -> {:ok, body |> Jason.decode! |> api.extract_image_url()}
 
       # Http request succeeded, but the status code != 200
       {:ok, %HTTPoison.Response{body: body}} -> {:error, body}
