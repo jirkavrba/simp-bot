@@ -23,7 +23,6 @@ defmodule Simp.Consumer do
   def handle_event(_event), do: :noop
 
   defp register_command({name, command}) do
-    # Apply all specified aliases
     names = [name] ++ Map.get(@aliases, name, [])
 
     CommandStorage.add_command(names , command)
