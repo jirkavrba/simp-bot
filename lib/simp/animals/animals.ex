@@ -1,30 +1,56 @@
 defmodule Simp.Animals.Animals do
-  # alias Simp.Animals.Endpoints
+  alias Simp.Emoji
+  alias Simp.Animals.Endpoints
+
   alias Nostrum.Api
   alias Nostrum.Struct
 
+
   @behaviour Nosedrum.Command
 
-  # @aliases Endpoints.CatsApi.aliases() ++
-  #          Endpoints.CatsApi.aliases()
+  @endpoints [
+    Endpoints.CatsApi
+  ]
 
   @impl true
   def usage, do: ["test"]
 
   @impl true
-  def description, do: "Milking the shit out of public animal API"
+  def description, do: "Milking the shit out of public animal APIs"
 
   @impl true
   def predicates, do: []
 
   @impl true
   def command(message, args) do
-    IO.inspect(args)
-    {:ok, _message} = Api.create_message(message.channel_id, "Roger that")
+    case args do
+      [endpoint]        -> handle_endpoint(message, endpoint)
+      # [endpoint, count] -> send_multiple(message, endpoint, count)
+      [] -> fail(message, "Bruh just choose one of the following:\n #{list_aliases()}")
+      _ -> fail(message, "Expected type as first parameter and optionally number as second parameter")
+    end
   end
 
-  @spec failed(Struct.Message.t(), String.t()) :: any()
-  defp failed(message, reason) do
-    # WIP
+  @spec handle_endpoint(Struct.Message.t(), String.t()) :: any()
+  defp handle_endpoint(message, selected) do
+    api = Enum.find(@endpoints, fn endpoint -> endpoint.aliases() |> Enum.member?(selected) end)
+
+    unless api == nil do
+      Api.create_message(message.channel_id, "Fetching #{inspect api} Soon TM")
+    else
+      fail(message, "Bruh I don't know this endpoint. Choose one the following:\n #{list_aliases()}")
+    end
+  end
+
+  @spec list_aliases() :: String.t()
+  defp list_aliases do
+    @endpoints
+    |> Enum.flat_map(&(&1.aliases()))
+    |> Enum.join(", ")
+  end
+
+  @spec fail(Struct.Message.t(), String.t()) :: any()
+  defp fail(message, reason) do
+    Api.create_message(message.channel_id, Emoji.failed <> "\n" <> reason)
   end
 end

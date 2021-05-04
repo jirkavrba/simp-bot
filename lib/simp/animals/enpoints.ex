@@ -1,5 +1,4 @@
 defmodule Simp.Animals.Endpoints do
-
   defmodule CatsApi do
     @moduledoc """
     Specification of https://thecatapi.com/
