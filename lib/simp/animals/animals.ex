@@ -5,6 +5,9 @@ defmodule Simp.Animals.Animals do
   alias Nostrum.Api
   alias Nostrum.Struct
 
+  import Nostrum.Struct.Embed
+  import Nostrum.Struct.User
+
   @behaviour Nosedrum.Command
 
   @endpoints [
@@ -35,7 +38,7 @@ defmodule Simp.Animals.Animals do
     unless api == nil do
       case fetch_api(api) do
         # Send image
-        {:ok, image} -> Api.create_message(message.channel_id, image)
+        {:ok, image} -> send_image_embed(message, image, api.title())
         {:error, reason} -> fail(message, reason)
       end
     else
@@ -44,6 +47,17 @@ defmodule Simp.Animals.Animals do
         "Bruh I don't know this endpoint. Choose one the following:\n**#{list_aliases()}**"
       )
     end
+  end
+
+  @spec send_image_embed(Struct.Message.t(), String.t(), String.t()) :: any()
+  defp send_image_embed(message, image, title) do
+    embed = %Nostrum.Struct.Embed{}
+    |> put_title(title)
+    |> put_image(image)
+    |> put_color(0x7289da)
+    |> put_field("Requested by", mention(message.author), false)
+
+    Api.create_message(message, embed: embed)
   end
 
   @spec fetch_api(Simp.Animals.AnimalApi.t()) :: {:ok, String.t()} | {:error, String.t()}
