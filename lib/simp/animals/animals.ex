@@ -8,10 +8,13 @@ defmodule Simp.Animals.Animals do
   import Nostrum.Struct.Embed
   import Nostrum.Struct.User
 
+  require Logger
+
   @behaviour Nosedrum.Command
 
   @endpoints [
-    Endpoints.CatsApi
+    Endpoints.CatsApi,
+    Endpoints.DogsApi
   ]
 
   @impl true
@@ -75,7 +78,9 @@ defmodule Simp.Animals.Animals do
       {:error, %HTTPoison.Error{reason: reason}} -> {:error, reason}
     end
   rescue
-    _ -> {:error, "There was an error"}
+    exception ->
+      Logger.error(exception)
+      {:error, "There was an error"}
   end
 
   @spec fail(Struct.Message.t(), String.t()) :: any()

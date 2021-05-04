@@ -18,5 +18,5 @@ defmodule Simp.Animals.AnimalApi do
   @callback headers() :: [{atom() | String.t(), atom() | String.t()}]
 
   @doc "Extracts the final image url from API response"
-  @callback extract_image_url(response :: String.t()) :: String.t()
+  @callback extract_image_url(response :: Map.t() | List.t()) :: String.t()
 end
