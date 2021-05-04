@@ -30,4 +30,17 @@ defmodule Simp.Animals.Endpoints do
     end
   end
 
+  defmodule FoxesApi do
+    @behaviour Simp.Animals.AnimalApi
+
+    def aliases, do: ~w(fox foxxo)
+    def url, do: "https://randomfox.ca/floof/"
+    def title, do: "What does the fox say!"
+    def headers, do: []
+    def extract_image_url(response) do
+      response
+      |> Map.get("image")
+    end
+  end
+
 end

@@ -14,7 +14,8 @@ defmodule Simp.Animals.Animals do
 
   @endpoints [
     Endpoints.CatsApi,
-    Endpoints.DogsApi
+    Endpoints.DogsApi,
+    Endpoints.FoxesApi
   ]
 
   @impl true
