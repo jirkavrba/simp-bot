@@ -25,3 +25,6 @@ simp-*.tar
 
 # Temporary files for e.g. tests
 /tmp
+
+# Run script that bootstraps the application environment
+/run
