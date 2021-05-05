@@ -1,6 +1,8 @@
 defmodule Simp.Consumer do
   use Nostrum.Consumer
 
+  alias Nostrum.Api
+
   alias Nosedrum.Invoker.Split, as: CommandInvoker
   alias Nosedrum.Storage.ETS, as: CommandStorage
 
@@ -13,10 +15,12 @@ defmodule Simp.Consumer do
   end
 
   def handle_event({:READY, _data, _state}) do
-    Enum.each(
-      @commands,
-      fn {name, command} -> CommandStorage.add_command([name], command) end
-    )
+    Enum.each(@commands, fn {name, command} -> CommandStorage.add_command([name], command) end)
+
+    case System.cmd("git", ["rev-parse", "HEAD"]) do
+      {hash, 0} -> Api.update_status(:online, "commit #{String.slice(hash, 0..8)}")
+      _ -> Api.update_status(:online, "oof, somebody doesn't have git installed")
+    end
   end
 
   def handle_event({:MESSAGE_CREATE, message, _state}) do
