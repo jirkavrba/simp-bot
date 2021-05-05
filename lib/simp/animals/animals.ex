@@ -20,7 +20,7 @@ defmodule Simp.Animals.Animals do
   ]
 
   @impl true
-  def usage, do: ["pls gib catto"]
+  def usage, do: ["pls gib catto", "pls gib 5 doggos"]
 
   @impl true
   def description, do: "Milking the shit out of public animal APIs"
@@ -31,27 +31,54 @@ defmodule Simp.Animals.Animals do
   @impl true
   def command(message, args) do
     case args do
+      # pls gib catto
       [endpoint] -> handle_endpoint(message, endpoint)
+      # pls gib 5 cats
+      [count, endpoint] -> handle_endpoint(message, endpoint, count)
+
       _ -> fail(message, "Bruh just choose one of the following:\n**#{list_aliases()}**")
+    end
+  end
+
+  @spec handle_endpoint(Struct.Message.t(), String.t(), String.t()) :: any()
+  def handle_endpoint(message, selected, count) do
+    max = 5
+
+    if find_api(selected) == nil do
+      fail(message, "Bruh, I don't know this endpoint. Choose one the following:\n**#{list_aliases()}**")
+    else
+      case Integer.parse(count) do
+        {number, _} ->
+          case number do
+            n when n < 0 -> fail(message, "Imagine having negative number of cats #{Emoji.sadcat}")
+            n when n > max -> fail(message, "Thats just too many #{Emoji.weary}\nI can handle only up to #{max} pics / message")
+
+            n -> for _ <- 1 .. n, do: handle_endpoint(message, selected)
+          end
+        :error -> fail(message, "Bruh, that's not even a valid number")
+      end
     end
   end
 
   @spec handle_endpoint(Struct.Message.t(), String.t()) :: any()
   defp handle_endpoint(message, selected) do
-    api = Enum.find(@endpoints, fn endpoint -> endpoint.aliases() |> Enum.member?(selected) end)
 
-    unless api == nil do
+    api = find_api(selected)
+
+    if api == nil do
+      fail(message, "Bruh I don't know this endpoint. Choose one the following:\n**#{list_aliases()}**")
+    else
       case fetch_api(api) do
         # Send image
         {:ok, image} -> send_image_embed(message, image, api.title())
         {:error, reason} -> fail(message, reason)
       end
-    else
-      fail(
-        message,
-        "Bruh I don't know this endpoint. Choose one the following:\n**#{list_aliases()}**"
-      )
     end
+  end
+
+  @spec find_api(String.t()) :: AnimalApi.t() | nil
+  defp find_api(name) do
+    Enum.find(@endpoints, fn endpoint -> endpoint.aliases() |> Enum.member?(name) end)
   end
 
   @spec send_image_embed(Struct.Message.t(), String.t(), String.t()) :: any()
@@ -87,7 +114,8 @@ defmodule Simp.Animals.Animals do
 
   @spec fail(Struct.Message.t(), String.t()) :: any()
   defp fail(message, reason) do
-    Api.create_message(message.channel_id, Emoji.failed() <> "\n" <> reason)
+    Api.create_message(message.channel_id, Emoji.failed())
+    Api.create_message(message.channel_id, reason)
   end
 
   @spec list_aliases() :: String.t()

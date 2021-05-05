@@ -4,4 +4,6 @@ defmodule Simp.Emoji do
   """
 
   def failed, do: "<:simp_failed:839217461902442506>"
+  def sadcat, do: "<:simp_sadcat:839414216393097217>"
+  def weary, do: "😩"
 end
