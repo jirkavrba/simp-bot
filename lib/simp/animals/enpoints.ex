@@ -43,6 +43,8 @@ defmodule Simp.Animals.Endpoints do
   end
 
   defmodule DucksApi do
+    @behaviour Simp.Animals.AnimalApi
+
     def aliases, do: ~w(duck quack ducks)
     def url, do: "https://random-d.uk/api/v1/random?type=png"
     def title, do: "Quack!"
