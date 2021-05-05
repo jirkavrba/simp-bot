@@ -43,4 +43,15 @@ defmodule Simp.Animals.Endpoints do
     end
   end
 
+  defmodule DucksApi do
+    def aliases, do: ~w(duck quack)
+    def url, do: "https://random-d.uk/api/v1/random?type=png"
+    def title, do: "Quack!"
+    def headers, do: []
+    def extract_image_url(response) do
+      response
+      |> Map.get("url")
+    end
+  end
+
 end
