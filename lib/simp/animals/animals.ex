@@ -50,7 +50,7 @@ defmodule Simp.Animals.Animals do
       case Integer.parse(count) do
         {number, _} ->
           case number do
-            n when n < 0 -> fail(message, "Imagine having negative number of cats #{Emoji.sadcat}")
+            n when n <= 0 -> fail(message, "No pics for you #{Emoji.sadcat}")
             n when n > max -> fail(message, "Thats just too many #{Emoji.weary}\nI can handle only up to #{max} pics / message")
 
             n -> for _ <- 1 .. n, do: handle_endpoint(message, selected)
