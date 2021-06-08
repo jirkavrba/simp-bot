@@ -6,14 +6,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class CommandsRegistry {
 
     private final Map<String, Command> commands;
-
-    public CommandsRegistry() {
-        this.commands = new HashMap<>();
-    }
 
     public CommandsRegistry(@NotNull Collection<Command> commands) {
         this.commands = new HashMap<>();
@@ -32,5 +29,14 @@ public class CommandsRegistry {
 
     public void registerAll(@NotNull Collection<Command> commands) {
         commands.forEach(this::register);
+    }
+
+    public Optional<Command> findCommandByName(@NotNull String name) {
+        try {
+            return Optional.ofNullable(this.commands.get(name));
+        }
+        catch (NullPointerException exception) {
+            return Optional.empty();
+        }
     }
 }

@@ -28,21 +28,18 @@ public class DiscordService {
 
     public void start() {
         this.updatePresence()
-                .then(this.registerCommandHandlers())
-                .then(this.client.onDisconnect())
-                .block();
+            .then(this.registerCommandHandlers())
+            .then(this.client.onDisconnect())
+            .block();
     }
 
     private Mono<Void> registerCommandHandlers() {
-        CommandsRegistry registry = new CommandsRegistry(
-            Set.of(
-                // TODO: Add commands
-            )
-        );
+        String prefix = "!";
+        CommandsRegistry registry = new CommandsRegistry(Set.of(
+            // TODO: Add commands
+        ));
 
-        CommandsEventHandler handler = new CommandsEventHandler(registry);
-
-        return handler.register(this.client);
+        return new CommandsEventHandler(prefix, registry).register(this.client);
     }
 
     private Mono<Void> updatePresence() {
