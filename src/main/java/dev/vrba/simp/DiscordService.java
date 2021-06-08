@@ -5,6 +5,7 @@ import discord4j.core.GatewayDiscordClient;
 import discord4j.core.object.presence.Activity;
 import discord4j.discordjson.json.gateway.StatusUpdate;
 import org.jetbrains.annotations.NotNull;
+import reactor.core.publisher.Mono;
 
 public class DiscordService {
 
@@ -19,21 +20,21 @@ public class DiscordService {
         if (this.client == null) {
             throw new IllegalStateException("Client initialised as null.");
         }
-
-        this.client.onDisconnect().block();
     }
 
     public void start() {
-        this.updatePresence();
+        this.updatePresence()
+                .then(this.client.onDisconnect())
+                .block();
     }
 
-    private void updatePresence() {
-        this.client.updatePresence(
+    private Mono<Void> updatePresence() {
+        return this.client.updatePresence(
                 StatusUpdate.builder()
-                        .afk(true)
+                        .afk(false)
                         .status("Online")
-                        .game(Activity.playing("with cattos"))
-                        .build())
-                .subscribe();
+                        .build()
+                        .withGame(Activity.playing("with doggos"))
+        );
     }
 }
