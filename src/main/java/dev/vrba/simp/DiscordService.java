@@ -1,11 +1,15 @@
 package dev.vrba.simp;
 
+import dev.vrba.simp.command.CommandsEventHandler;
+import dev.vrba.simp.command.CommandsRegistry;
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.object.presence.Activity;
 import discord4j.discordjson.json.gateway.StatusUpdate;
 import org.jetbrains.annotations.NotNull;
 import reactor.core.publisher.Mono;
+
+import java.util.Set;
 
 public class DiscordService {
 
@@ -24,8 +28,21 @@ public class DiscordService {
 
     public void start() {
         this.updatePresence()
+                .then(this.registerCommandHandlers())
                 .then(this.client.onDisconnect())
                 .block();
+    }
+
+    private Mono<Void> registerCommandHandlers() {
+        CommandsRegistry registry = new CommandsRegistry(
+            Set.of(
+                // TODO: Add commands
+            )
+        );
+
+        CommandsEventHandler handler = new CommandsEventHandler(registry);
+
+        return handler.register(this.client);
     }
 
     private Mono<Void> updatePresence() {
