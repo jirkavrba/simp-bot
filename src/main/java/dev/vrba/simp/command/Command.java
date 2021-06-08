@@ -7,5 +7,5 @@ public interface Command {
 
     @NotNull String getName();
 
-    @NotNull Mono<Void> execute();
+    @NotNull Mono<Void> execute(@NotNull CommandContext context);
 }

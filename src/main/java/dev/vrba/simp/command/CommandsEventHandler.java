@@ -1,7 +1,9 @@
 package dev.vrba.simp.command;
 
+import dev.vrba.simp.exception.CommandExecutionException;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.object.entity.Guild;
 import org.jetbrains.annotations.NotNull;
 import reactor.core.publisher.Mono;
 
@@ -33,21 +35,23 @@ public class CommandsEventHandler {
     }
 
     private Mono<Void> handleCommand(@NotNull Command command, @NotNull MessageCreateEvent event) {
-        // TODO: Implement this
-        return Mono.empty();
+        return event.getGuild()
+            .map(guild -> createCommandContext(guild, event))
+            .map(command::execute)
+            // TODO: properly handle the exception (log / send error message / ..)
+            .onErrorContinue(CommandExecutionException.class, (exception, object) -> {})
+            .then();
+    }
+
+    private CommandContext createCommandContext(@NotNull Guild guild, @NotNull MessageCreateEvent event) {
+        return new CommandContext();
     }
 
     private boolean shouldHandle(@NotNull MessageCreateEvent event) {
         String content = event.getMessage().getContent();
 
-        return event.getMessage()
-                .getAuthor()
-                .map(author ->
-                        // The author is a member (and not a bot)
-                        !author.isBot() &&
-                        // The message starts with a command prefix
-                        content.startsWith(this.prefix)
-                    )
+        return event.getMember()
+                .map(user -> !user.isBot() && content.startsWith(this.prefix))
                 .orElse(false);
     }
 }
