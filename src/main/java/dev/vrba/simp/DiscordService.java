@@ -3,6 +3,7 @@ package dev.vrba.simp;
 import dev.vrba.simp.command.CommandsEventHandler;
 import dev.vrba.simp.command.CommandsRegistry;
 import dev.vrba.simp.command.status.PingCommand;
+import dev.vrba.simp.command.status.UptimeCommand;
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.object.presence.Activity;
@@ -37,7 +38,8 @@ public class DiscordService {
     private Mono<Void> registerCommandHandlers() {
         String prefix = "pls "; // pls name: [gib] arguments: [10 cattos]
         CommandsRegistry registry = new CommandsRegistry(Set.of(
-                new PingCommand()
+                new PingCommand(),
+                new UptimeCommand()
         ));
 
         return new CommandsEventHandler(prefix, registry).register(this.client);

@@ -3,7 +3,6 @@ package dev.vrba.simp.command;
 import dev.vrba.simp.exception.CommandExecutionException;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;
-import discord4j.core.object.entity.Guild;
 import org.jetbrains.annotations.NotNull;
 import reactor.core.publisher.Mono;
 
