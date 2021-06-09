@@ -22,12 +22,13 @@ public class CommandsEventHandler {
         return client.on(MessageCreateEvent.class)
                 .filter(this::shouldHandle)
                 .flatMap(this::handleMessage)
+                .log()
                 .then();
     }
 
     private Mono<Void> handleMessage(@NotNull MessageCreateEvent event) {
         String content = event.getMessage().getContent();
-        String name = content.split("\s+")[0].replace(this.prefix, "");
+        String name = content.replace(this.prefix, "").split("\s+")[0];
 
         return this.registry.findCommandByName(name)
                 .map(command -> this.handleCommand(command, event))
@@ -35,16 +36,23 @@ public class CommandsEventHandler {
     }
 
     private Mono<Void> handleCommand(@NotNull Command command, @NotNull MessageCreateEvent event) {
-        return event.getGuild()
-            .map(guild -> createCommandContext(guild, event))
-            .map(command::execute)
+        return command.execute(createCommandContext(event))
             // TODO: properly handle the exception (log / send error message / ..)
             .onErrorContinue(CommandExecutionException.class, (exception, object) -> {})
-            .then();
+            .log();
     }
 
-    private CommandContext createCommandContext(@NotNull Guild guild, @NotNull MessageCreateEvent event) {
-        return new CommandContext();
+    private CommandContext createCommandContext(@NotNull MessageCreateEvent event) {
+        // Member is already verified in {@link shouldHandle}
+        //noinspection OptionalGetWithoutIsPresent
+        return new CommandContext(
+            event,
+            event.getMember().get(),
+            event.getGuild(),
+            event.getMessage().getChannel(),
+            event.getMessage().getUserMentionIds(),
+            event.getMessage().getRoleMentionIds()
+        );
     }
 
     private boolean shouldHandle(@NotNull MessageCreateEvent event) {
