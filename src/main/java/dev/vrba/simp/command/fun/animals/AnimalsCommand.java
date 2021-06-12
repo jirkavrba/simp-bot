@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.time.Instant;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class AnimalsCommand implements Command {
@@ -108,14 +109,17 @@ public class AnimalsCommand implements Command {
         Mono<InputStream> content = client.get().responseContent().aggregate().asInputStream();
 
         return Flux.range(0, count)
-                .flatMap(i ->
-                    // TODO: Get rid of this tuple
-                    promise.zipWith(endpoint.extractImageFromResponse(content))
-                    .flatMap(tuple -> tuple.getT1().createEmbed(embed ->
+            .flatMap(i ->
+                promise.zipWith(
+                    endpoint.extractImageFromResponse(content),
+                    (channel, image) -> channel.createEmbed(embed ->
                             embed.setTitle(endpoint.getTitle())
-                                    .setImage(tuple.getT2())
-                                    .setTimestamp(Instant.now())
-                    )))
-                .then();
+                                .setImage(image)
+                                .setTimestamp(Instant.now()))
+                )
+                // TODO: this looking kinda sus
+                .flatMap(Function.identity())
+            )
+            .then();
     }
 }
