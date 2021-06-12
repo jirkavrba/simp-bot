@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -26,4 +27,6 @@ public class CommandContext {
     private final Set<Snowflake> userMentions;
 
     private final Set<Snowflake> roleMentions;
+
+    private final List<String> arguments;
 }
