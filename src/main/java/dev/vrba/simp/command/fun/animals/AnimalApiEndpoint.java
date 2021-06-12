@@ -1,7 +1,10 @@
 package dev.vrba.simp.command.fun.animals;
 
 import org.jetbrains.annotations.NotNull;
+import reactor.core.publisher.Mono;
+import reactor.netty.ByteBufFlux;
 
+import java.io.InputStream;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,6 +29,5 @@ public interface AnimalApiEndpoint {
      */
      @NotNull Map<String, String> getHeaders();
 
-     // TODO: Maybe make the return type mono?
-     @NotNull String extractImageFromResponse(/* TODO: Add response object*/);
+     @NotNull Mono<String> extractImageFromResponse(@NotNull Mono<InputStream> response);
 }

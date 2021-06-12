@@ -25,7 +25,6 @@ public class CommandsEventHandler {
         return client.on(MessageCreateEvent.class)
                 .filter(this::shouldHandle)
                 .flatMap(this::handleMessage)
-                .log()
                 .then();
     }
 
@@ -41,8 +40,7 @@ public class CommandsEventHandler {
     private Mono<Void> handleCommand(@NotNull Command command, @NotNull MessageCreateEvent event) {
         return command.execute(createCommandContext(event))
             // TODO: properly handle the exception (log / send error message / ..)
-            .onErrorContinue(CommandExecutionException.class, (exception, object) -> {})
-            .log();
+            .onErrorContinue(CommandExecutionException.class, (exception, object) -> {});
     }
 
     private CommandContext createCommandContext(@NotNull MessageCreateEvent event) {
