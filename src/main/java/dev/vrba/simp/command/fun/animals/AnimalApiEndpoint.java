@@ -2,7 +2,6 @@ package dev.vrba.simp.command.fun.animals;
 
 import org.jetbrains.annotations.NotNull;
 import reactor.core.publisher.Mono;
-import reactor.netty.ByteBufFlux;
 
 import java.io.InputStream;
 import java.util.Map;

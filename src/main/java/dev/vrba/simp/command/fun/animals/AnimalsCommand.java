@@ -6,8 +6,8 @@ import dev.vrba.simp.command.fun.animals.endpoints.CatApiEndpoint;
 import dev.vrba.simp.utilities.StatusEmbed;
 import discord4j.core.object.entity.channel.MessageChannel;
 import org.jetbrains.annotations.NotNull;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.netty.ByteBufFlux;
 import reactor.netty.http.client.HttpClient;
 
 import java.io.InputStream;
@@ -83,7 +83,7 @@ public class AnimalsCommand implements Command {
         return this.endpoints.stream()
                 .filter(api -> api.getNames().contains(endpoint))
                 .findFirst()
-                .map(api -> this.sendImage(channel, api))
+                .map(api -> this.sendImages(channel, api, count))
                 .orElseGet(() -> StatusEmbed.sendError(
                         channel,
                         String.format(
@@ -100,22 +100,22 @@ public class AnimalsCommand implements Command {
                 ));
     }
 
-    private Mono<Void> sendImage(@NotNull Mono<MessageChannel> promise, @NotNull AnimalApiEndpoint endpoint) {
+    private Mono<Void> sendImages(@NotNull Mono<MessageChannel> promise, @NotNull AnimalApiEndpoint endpoint, int count) {
         HttpClient client = HttpClient.create()
                 .baseUrl(endpoint.getUrl())
-                .headers(headers ->
-                    endpoint.getHeaders()
-                            .forEach(headers::add)
-                );
+                .headers(headers -> endpoint.getHeaders().forEach(headers::add));
 
         Mono<InputStream> content = client.get().responseContent().aggregate().asInputStream();
 
-        return promise.zipWith(endpoint.extractImageFromResponse(content))
-                .flatMap(tuple -> tuple.getT1().createEmbed(embed ->
-                    embed.setTitle(endpoint.getTitle())
-                        .setImage(tuple.getT2())
-                        .setTimestamp(Instant.now())
-                ))
+        return Flux.range(0, count)
+                .flatMap(i ->
+                    // TODO: Get rid of this tuple
+                    promise.zipWith(endpoint.extractImageFromResponse(content))
+                    .flatMap(tuple -> tuple.getT1().createEmbed(embed ->
+                            embed.setTitle(endpoint.getTitle())
+                                    .setImage(tuple.getT2())
+                                    .setTimestamp(Instant.now())
+                    )))
                 .then();
     }
 }
