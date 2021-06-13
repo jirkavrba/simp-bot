@@ -2,6 +2,8 @@ package dev.vrba.simp.command.status;
 
 import dev.vrba.simp.command.Command;
 import dev.vrba.simp.command.CommandContext;
+import dev.vrba.simp.command.annotation.CommandDescription;
+import dev.vrba.simp.command.annotation.CommandUsage;
 import org.jetbrains.annotations.NotNull;
 import reactor.core.publisher.Mono;
 
@@ -9,6 +11,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
+@CommandUsage("pls uptime")
+@CommandDescription("Replies with embed containing uptime of the currently deployed instance.")
 public class UptimeCommand implements Command {
 
     private final Instant launch;

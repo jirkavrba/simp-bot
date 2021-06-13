@@ -2,6 +2,8 @@ package dev.vrba.simp.command.fun.animals;
 
 import dev.vrba.simp.command.Command;
 import dev.vrba.simp.command.CommandContext;
+import dev.vrba.simp.command.annotation.CommandDescription;
+import dev.vrba.simp.command.annotation.CommandUsage;
 import dev.vrba.simp.command.fun.animals.endpoints.CatsApiEndpoint;
 import dev.vrba.simp.command.fun.animals.endpoints.DogsApiEndpoint;
 import dev.vrba.simp.command.fun.animals.endpoints.DucksApiEndpoint;
@@ -20,6 +22,8 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@CommandUsage({"pls gib catto", "pls gib another doggo", "pls gib 10 doggos", "pls gibe 3 more ducks", "pls gib me 5 pussies"})
+@CommandDescription("Milking the shit out of public animal APIs.\nSupports up to 10 pics / command.")
 public class AnimalsCommand implements Command {
 
     private final Set<AnimalApiEndpoint> endpoints = Set.of(
