@@ -10,6 +10,8 @@ public class UrbanDictionaryResult {
 
     private final String definition;
 
+    private final String example;
+
     private final String link;
 
     private final int thumbsUp;
