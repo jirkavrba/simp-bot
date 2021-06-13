@@ -7,6 +7,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CommandDescription {
-    String value();
+public @interface CommandUsage {
+    String[] value();
 }

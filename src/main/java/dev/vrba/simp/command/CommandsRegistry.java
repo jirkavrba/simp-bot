@@ -4,7 +4,6 @@ import dev.vrba.simp.exception.DuplicateCommandRegistration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CommandsRegistry {
 
@@ -30,14 +29,6 @@ public class CommandsRegistry {
     }
 
     @NotNull
-    public Set<Class<? extends Command>> getRegisteredCommandClasses() {
-        return this.commands.values()
-                .stream()
-                .map(Command::getClass)
-                .collect(Collectors.toSet());
-    }
-
-    @NotNull
     public Optional<Command> findCommandByName(@NotNull String name) {
         try {
             return Optional.ofNullable(this.commands.get(name));
@@ -45,5 +36,10 @@ public class CommandsRegistry {
         catch (NullPointerException exception) {
             return Optional.empty();
         }
+    }
+
+    @NotNull
+    public Set<Command> getRegisteredCommands() {
+        return new HashSet<>(this.commands.values());
     }
 }

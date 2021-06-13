@@ -2,12 +2,16 @@ package dev.vrba.simp.command.status;
 
 import dev.vrba.simp.command.Command;
 import dev.vrba.simp.command.CommandContext;
+import dev.vrba.simp.command.annotation.CommandDescription;
+import dev.vrba.simp.command.annotation.CommandUsage;
 import discord4j.rest.util.Color;
 import org.jetbrains.annotations.NotNull;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 
+@CommandUsage("pls github")
+@CommandDescription("Provides a quick shortcut for viewing the repository and reporting issues")
 public class GithubLinksCommand implements Command {
 
     private final static String REPOSITORY_URL = "https://github.com/jirkavrba/simp-bot";
