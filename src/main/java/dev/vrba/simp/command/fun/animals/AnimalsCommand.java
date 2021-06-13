@@ -4,6 +4,7 @@ import dev.vrba.simp.command.Command;
 import dev.vrba.simp.command.CommandContext;
 import dev.vrba.simp.command.fun.animals.endpoints.CatsApiEndpoint;
 import dev.vrba.simp.command.fun.animals.endpoints.DogsApiEndpoint;
+import dev.vrba.simp.command.fun.animals.endpoints.FoxesApiEndpoint;
 import dev.vrba.simp.utilities.StatusEmbed;
 import discord4j.core.object.entity.channel.MessageChannel;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +23,8 @@ public class AnimalsCommand implements Command {
 
     private final Set<AnimalApiEndpoint> endpoints = Set.of(
             new CatsApiEndpoint(),
-            new DogsApiEndpoint()
+            new DogsApiEndpoint(),
+            new FoxesApiEndpoint()
     );
 
     @Override
