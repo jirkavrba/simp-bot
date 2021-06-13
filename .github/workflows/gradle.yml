@@ -25,7 +25,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build with Gradle
-      run: ./gradlew shadowJar
+      run: ./gradlew build shadowJar
 
   - name: Create Release
       id: create_release
