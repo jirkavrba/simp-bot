@@ -29,6 +29,9 @@ public class AnimalsCommand implements Command {
             new DucksApiEndpoint()
     );
 
+    // Allows usage of `pls gib another doggo` etc.
+    private final Set<String> extraKeywords = Set.of("a", "some", "another", "me", "more");
+
     @Override
     public @NotNull String getName() {
         return "gib";
@@ -36,7 +39,11 @@ public class AnimalsCommand implements Command {
 
     @Override
     public @NotNull Mono<Void> execute(@NotNull CommandContext context) {
-        List<String> arguments = context.getArguments();
+        List<String> arguments = context.getArguments()
+                .stream()
+                // Remove extra keywords from the arguments
+                .filter(argument -> !extraKeywords.contains(argument))
+                .collect(Collectors.toList());
 
         if (arguments.isEmpty()) {
             return StatusEmbed.sendError(
