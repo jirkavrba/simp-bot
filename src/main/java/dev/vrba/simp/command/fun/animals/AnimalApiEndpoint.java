@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 public abstract class AnimalApiEndpoint {
     /**
@@ -42,12 +43,15 @@ public abstract class AnimalApiEndpoint {
     public abstract Mono<String> extractImageFromResponse(@NotNull Mono<InputStream> response);
 
     @NotNull
-    protected Optional<JsonNode> parseJson(@NotNull InputStream stream) {
-        try {
-            return Optional.ofNullable(new ObjectMapper().readTree(stream));
-        }
-        catch (Exception exception) {
-            return Optional.empty();
-        }
+    protected Mono<String> extractImageFromJson(@NotNull Mono<InputStream> stream, @NotNull Function<JsonNode, String> extractor) {
+        return stream.flatMap(input -> {
+            try {
+                // TODO: Fix this blocking call
+                JsonNode tree = new ObjectMapper().readTree(input);
+                return Mono.just(extractor.apply(tree));
+            } catch (Exception exception) {
+                return Mono.empty();
+            }
+        });
     }
 }

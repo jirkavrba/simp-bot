@@ -27,10 +27,6 @@ public class DucksApiEndpoint extends AnimalApiEndpoint {
 
     @Override
     public @NotNull Mono<String> extractImageFromResponse(@NotNull Mono<InputStream> response) {
-        return response
-                .map(this::parseJson)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(json -> json.get("url").asText());
+        return this.extractImageFromJson(response, json -> json.get("url").asText());
     }
 }

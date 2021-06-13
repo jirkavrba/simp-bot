@@ -27,10 +27,6 @@ public class FoxesApiEndpoint extends AnimalApiEndpoint {
 
     @Override
     public @NotNull Mono<String> extractImageFromResponse(@NotNull Mono<InputStream> response) {
-        return response
-                .map(this::parseJson)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(json -> json.get("image").asText());
+        return this.extractImageFromJson(response, json -> json.get("image").asText());
     }
 }
