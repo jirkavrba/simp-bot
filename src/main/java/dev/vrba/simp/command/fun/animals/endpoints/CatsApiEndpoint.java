@@ -29,7 +29,7 @@ public class CatsApiEndpoint extends AnimalApiEndpoint {
 
     @Override
     public @NotNull Set<String> getNames() {
-        return Set.of("cat", "cats", "catto", "cattos", "pussy", "pussies");
+        return Set.of("cat", "cats", "catto", "cattos", "pussy", "pussies", "kitty", "kitties", "kitten");
     }
 
     @Override
