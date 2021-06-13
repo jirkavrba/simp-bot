@@ -4,6 +4,7 @@ import dev.vrba.simp.command.CommandsEventHandler;
 import dev.vrba.simp.command.CommandsRegistry;
 import dev.vrba.simp.command.fun.animals.AnimalsCommand;
 import dev.vrba.simp.command.status.GithubLinksCommand;
+import dev.vrba.simp.command.status.HelpCommand;
 import dev.vrba.simp.command.status.PingCommand;
 import dev.vrba.simp.command.status.UptimeCommand;
 import discord4j.core.DiscordClientBuilder;
@@ -45,6 +46,9 @@ public class DiscordService {
                 new GithubLinksCommand(),
                 new AnimalsCommand()
         ));
+
+        // Help needs access to CommandsRegistry instance
+        registry.register(new HelpCommand(registry));
 
         return new CommandsEventHandler(prefix, registry).register(this.client);
     }
