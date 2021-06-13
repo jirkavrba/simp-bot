@@ -42,8 +42,13 @@ public class UrbanDictionaryCommand implements Command {
 
     @NotNull
     private Mono<Void> searchForDefinition(@NotNull String search, @NotNull MessageChannel channel) {
-        HttpClient client = HttpClient.create().baseUrl("https://api.urbandictionary.com/v0/define?term=" + search);
-        Mono<InputStream> response = client.get().responseContent().aggregate().asInputStream();
+        HttpClient client = HttpClient.create().baseUrl("https://api.urbandictionary.com/");
+
+        Mono<InputStream> response = client.get()
+                .uri("/v0/define?term=" + search)
+                .responseContent()
+                .aggregate()
+                .asInputStream();
 
         return response.flatMap(input -> {
             try {
@@ -60,6 +65,7 @@ public class UrbanDictionaryCommand implements Command {
                     new UrbanDictionaryResult(
                         result.get("word").asText(),
                         result.get("definition").asText().replace("[", "").replace("]", ""),
+                        result.get("example").asText().replace("[", "").replace("]", ""),
                         result.get("permalink").asText(),
                         result.get("thumbs_up").asInt(),
                         result.get("thumbs_down").asInt()
@@ -77,7 +83,7 @@ public class UrbanDictionaryCommand implements Command {
     private Consumer<? super EmbedCreateSpec> createResultEmbed(@NotNull UrbanDictionaryResult result) {
         return embed -> embed
                 .setAuthor(result.getWord(), result.getLink(), null)
-                .setDescription(result.getDefinition())
+                .setDescription(result.getDefinition() + "\n\n_" + result.getExample() + "_")
                 .setFooter("\uD83D\uDC4D " + result.getThumbsUp() + " / \uD83D\uDC4E " + result.getThumbsDown(), null)
                 .setTimestamp(Instant.now())
                 .setColor(Color.of(0x144FE6));
