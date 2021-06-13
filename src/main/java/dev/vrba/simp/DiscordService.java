@@ -3,6 +3,7 @@ package dev.vrba.simp;
 import dev.vrba.simp.command.CommandsEventHandler;
 import dev.vrba.simp.command.CommandsRegistry;
 import dev.vrba.simp.command.fun.animals.AnimalsCommand;
+import dev.vrba.simp.command.fun.urban.UrbanDictionaryCommand;
 import dev.vrba.simp.command.status.GithubLinksCommand;
 import dev.vrba.simp.command.status.HelpCommand;
 import dev.vrba.simp.command.status.PingCommand;
@@ -44,7 +45,8 @@ public class DiscordService {
                 new PingCommand(),
                 new UptimeCommand(),
                 new GithubLinksCommand(),
-                new AnimalsCommand()
+                new AnimalsCommand(),
+                new UrbanDictionaryCommand()
         ));
 
         // Help needs access to CommandsRegistry instance
