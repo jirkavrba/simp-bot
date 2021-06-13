@@ -1,14 +1,11 @@
 package dev.vrba.simp.command.fun.animals.endpoints;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.vrba.simp.command.fun.animals.AnimalApiEndpoint;
 import org.jetbrains.annotations.NotNull;
 import reactor.core.publisher.Mono;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 public class CatsApiEndpoint extends AnimalApiEndpoint {

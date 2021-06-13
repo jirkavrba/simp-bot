@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import reactor.core.publisher.Mono;
 
 import java.io.InputStream;
-import java.util.Optional;
 import java.util.Set;
 
 public class FoxesApiEndpoint extends AnimalApiEndpoint {
