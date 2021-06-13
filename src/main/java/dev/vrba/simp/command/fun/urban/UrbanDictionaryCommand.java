@@ -83,7 +83,9 @@ public class UrbanDictionaryCommand implements Command {
     private Consumer<? super EmbedCreateSpec> createResultEmbed(@NotNull UrbanDictionaryResult result) {
         return embed -> embed
                 .setAuthor(result.getWord(), result.getLink(), null)
-                .setDescription(result.getDefinition() + "\n\n_" + result.getExample() + "_")
+                .setDescription(
+                        result.getDefinition() + "\n\n" +
+                        "_" + result.getExample().replaceAll("[_*`]", "") + "_")
                 .setFooter("\uD83D\uDC4D " + result.getThumbsUp() + " / \uD83D\uDC4E " + result.getThumbsDown(), null)
                 .setTimestamp(Instant.now())
                 .setColor(Color.of(0x144FE6));
