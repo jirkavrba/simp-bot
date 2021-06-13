@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.HashSet;
 
 public class AnimalsCommand implements Command {
 
@@ -61,8 +62,18 @@ public class AnimalsCommand implements Command {
         // pls gib <count> <endpoint>
         if (arguments.size() == 2) {
             try {
-                int count = Integer.parseInt(arguments.get(0));
-
+                HashSet<String> set = new HashSet<String>();
+                set.add("a");
+                set.add("some");
+                set.add("another");
+                set.add("any");
+                set.add("more");
+                int count;
+                if(set.contains(arguments.get(0))){
+                    count = 1;
+                }else{
+                    count = Integer.parseInt(arguments.get(0));
+                }
                 return this.handle(
                         context.getChannel(),
                         arguments.get(1),
