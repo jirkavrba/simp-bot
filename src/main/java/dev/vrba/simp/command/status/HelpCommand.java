@@ -21,6 +21,21 @@ public class HelpCommand implements Command {
 
     @Override
     public @NotNull Mono<Void> execute(@NotNull CommandContext context) {
+        // pls help <command-name>
+        if (context.getArguments().size() == 1) {
+            return this.registry.findCommandByName(context.getArguments().get(0))
+                    .map(command -> this.handleCommandHelp(command, context))
+                    .orElseGet(() -> this.handleCommandsHelp(context));
+        }
+
+        return this.handleCommandsHelp(context);
+    }
+
+    private @NotNull Mono<Void> handleCommandsHelp(@NotNull CommandContext context) {
+        return Mono.empty();
+    }
+
+    private @NotNull Mono<Void> handleCommandHelp(@NotNull Command command, @NotNull CommandContext context) {
         return Mono.empty();
     }
 }

@@ -3,10 +3,8 @@ package dev.vrba.simp.command;
 import dev.vrba.simp.exception.DuplicateCommandRegistration;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CommandsRegistry {
 
@@ -31,6 +29,15 @@ public class CommandsRegistry {
         commands.forEach(this::register);
     }
 
+    @NotNull
+    public Set<Class<? extends Command>> getRegisteredCommandClasses() {
+        return this.commands.values()
+                .stream()
+                .map(Command::getClass)
+                .collect(Collectors.toSet());
+    }
+
+    @NotNull
     public Optional<Command> findCommandByName(@NotNull String name) {
         try {
             return Optional.ofNullable(this.commands.get(name));
