@@ -8,13 +8,14 @@ import reactor.core.publisher.Mono;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
-public class CatApiEndpoint implements AnimalApiEndpoint {
+public class CatsApiEndpoint extends AnimalApiEndpoint {
 
     private final String key;
 
-    public CatApiEndpoint() {
+    public CatsApiEndpoint() {
         try {
             this.key = System.getenv("CAT_API_KEY");
 
@@ -47,19 +48,11 @@ public class CatApiEndpoint implements AnimalApiEndpoint {
     }
 
     @Override
-    public @NotNull Mono<String> extractImageFromResponse(@NotNull Mono<InputStream> promise) {
-        return promise.map(stream -> {
-            try {
-                return new ObjectMapper()
-                        .readTree(stream)
-                        .get(0)
-                        .get("url")
-                        .asText();
-            }
-            // TODO: Fix this shit
-            catch (IOException exception) {
-                throw new RuntimeException(exception);
-            }
-        });
+    public @NotNull Mono<String> extractImageFromResponse(@NotNull Mono<InputStream> response) {
+        return response
+                .map(this::parseJson)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(json -> json.get(0).get("url").asText());
     }
 }
