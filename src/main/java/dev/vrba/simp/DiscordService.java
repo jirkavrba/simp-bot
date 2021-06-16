@@ -8,6 +8,7 @@ import dev.vrba.simp.command.status.GithubLinksCommand;
 import dev.vrba.simp.command.status.HelpCommand;
 import dev.vrba.simp.command.status.PingCommand;
 import dev.vrba.simp.command.status.UptimeCommand;
+import discord4j.core.DiscordClient;
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.object.presence.Activity;
@@ -22,9 +23,11 @@ public class DiscordService {
     private final GatewayDiscordClient client;
 
     public DiscordService(@NotNull String token) {
-        this.client = DiscordClientBuilder.create(token)
-                .build()
-                .login()
+        DiscordClient client = DiscordClientBuilder.create(token).build();
+
+        this.client = client.login()
+                // Reset the bot and re-login, in case of an error
+                .onErrorResume(Throwable.class, error -> client.login())
                 .block();
 
         if (this.client == null) {
