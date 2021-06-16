@@ -1,6 +1,5 @@
 package dev.vrba.simp.command;
 
-import dev.vrba.simp.exception.CommandExecutionException;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import org.jetbrains.annotations.NotNull;
@@ -48,9 +47,9 @@ public class CommandsEventHandler {
     }
 
     private Mono<Void> handleCommand(@NotNull Command command, @NotNull MessageCreateEvent event) {
-        return command.execute(createCommandContext(event))
-            // TODO: properly handle the exception (log / send error message / ..)
-            .onErrorContinue(CommandExecutionException.class, (exception, object) -> {});
+        return command
+                .execute(createCommandContext(event))
+                .onErrorResume(this::handleError);
     }
 
     private CommandContext createCommandContext(@NotNull MessageCreateEvent event) {
