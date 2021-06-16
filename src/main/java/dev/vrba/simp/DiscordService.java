@@ -23,11 +23,9 @@ public class DiscordService {
     private final GatewayDiscordClient client;
 
     public DiscordService(@NotNull String token) {
-        DiscordClient client = DiscordClientBuilder.create(token).build();
-
-        this.client = client.login()
-                // Reset the bot and re-login, in case of an error
-                .onErrorResume(Throwable.class, error -> client.login())
+        this.client = DiscordClientBuilder.create(token)
+                .build()
+                .login()
                 .block();
 
         if (this.client == null) {
