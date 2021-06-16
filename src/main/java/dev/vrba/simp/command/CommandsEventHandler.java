@@ -8,6 +8,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class CommandsEventHandler {
@@ -16,16 +17,25 @@ public class CommandsEventHandler {
 
     private final CommandsRegistry registry;
 
+    private final Logger logger;
+
     public CommandsEventHandler(@NotNull String prefix, @NotNull CommandsRegistry registry) {
         this.prefix = prefix;
         this.registry = registry;
+        this.logger = Logger.getLogger(this.getClass().getName());
     }
 
     public Mono<Void> register(@NotNull GatewayDiscordClient client) {
         return client.on(MessageCreateEvent.class)
                 .filter(this::shouldHandle)
                 .flatMap(this::handleMessage)
+                .onErrorResume(this::handleError)
                 .then();
+    }
+
+    private Mono<Void> handleError(@NotNull Throwable throwable) {
+        this.logger.severe(throwable.getMessage());
+        return Mono.empty();
     }
 
     private Mono<Void> handleMessage(@NotNull MessageCreateEvent event) {

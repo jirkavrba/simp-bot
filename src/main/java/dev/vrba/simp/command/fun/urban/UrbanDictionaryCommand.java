@@ -64,8 +64,8 @@ public class UrbanDictionaryCommand implements Command {
                 return channel.createEmbed(this.createResultEmbed(
                     new UrbanDictionaryResult(
                         result.get("word").asText(),
-                        result.get("definition").asText().replace("[", "").replace("]", ""),
-                        result.get("example").asText().replace("[", "").replace("]", ""),
+                        this.formatEmbedString(result.get("definition").asText()),
+                        this.formatEmbedString(result.get("example").asText()),
                         result.get("permalink").asText(),
                         result.get("thumbs_up").asInt(),
                         result.get("thumbs_down").asInt()
@@ -77,6 +77,17 @@ public class UrbanDictionaryCommand implements Command {
             }
         })
         .then();
+    }
+
+    @NotNull
+    private String formatEmbedString(@NotNull String source) {
+        if (source.length() > 1000)  {
+            source = source.substring(0, 1000) + "...";
+        }
+
+        return source
+                .replace("[", "")
+                .replace("]", "");
     }
 
     @NotNull
