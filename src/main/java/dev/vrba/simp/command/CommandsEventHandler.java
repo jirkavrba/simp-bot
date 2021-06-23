@@ -7,19 +7,20 @@ import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class CommandsEventHandler {
 
-    private final String prefix;
+    private final Set<String> prefixes;
 
     private final CommandsRegistry registry;
 
     private final Logger logger;
 
-    public CommandsEventHandler(@NotNull String prefix, @NotNull CommandsRegistry registry) {
-        this.prefix = prefix;
+    public CommandsEventHandler(@NotNull Set<String> prefixes, @NotNull CommandsRegistry registry) {
+        this.prefixes = prefixes;
         this.registry = registry;
         this.logger = Logger.getLogger(this.getClass().getName());
     }
@@ -37,28 +38,38 @@ public class CommandsEventHandler {
         return Mono.empty();
     }
 
+    @NotNull
     private Mono<Void> handleMessage(@NotNull MessageCreateEvent event) {
-        String content = event.getMessage().getContent();
-        String name = content.replace(this.prefix, "").split("\s+")[0];
+        String content = this.replaceFirstMatchedPrefix(event.getMessage().getContent());
+        String name = content.split("\s+")[0];
 
         return this.registry.findCommandByName(name)
                 .map(command -> this.handleCommand(command, event))
                 .orElse(Mono.empty());
     }
 
+    @NotNull
+    private String replaceFirstMatchedPrefix(@NotNull String source) {
+        String content = source.toLowerCase();
+        String prefix = this.prefixes.stream()
+                .filter(content::contains)
+                .findFirst()
+                .orElse("");
+
+        return content.replaceFirst(prefix, "");
+    }
+
+    @NotNull
     private Mono<Void> handleCommand(@NotNull Command command, @NotNull MessageCreateEvent event) {
         return command
                 .execute(createCommandContext(event))
                 .onErrorResume(this::handleError);
     }
 
+    @NotNull
     private CommandContext createCommandContext(@NotNull MessageCreateEvent event) {
-        List<String> arguments = Arrays.stream(event.getMessage()
-                .getContent()
-                .replace(this.prefix, "")
-                .split("\s+"))
-                .skip(1)
-                .collect(Collectors.toList());
+        String content = this.replaceFirstMatchedPrefix(event.getMessage().getContent());
+        List<String> arguments = Arrays.stream(content.split("\s+")).skip(1).collect(Collectors.toList());
 
         // Member is already verified in {@link shouldHandle}
         //noinspection OptionalGetWithoutIsPresent
@@ -77,7 +88,10 @@ public class CommandsEventHandler {
         String content = event.getMessage().getContent();
 
         return event.getMember()
-                .map(user -> !user.isBot() && content.startsWith(this.prefix))
+                .map(user -> !user.isBot())
+                .map(predicate -> predicate && this.prefixes.stream().anyMatch(
+                    prefix -> content.toLowerCase().startsWith(prefix)
+                ))
                 .orElse(false);
     }
 }
