@@ -4,10 +4,7 @@ import dev.vrba.simp.command.Command;
 import dev.vrba.simp.command.CommandContext;
 import dev.vrba.simp.command.annotation.CommandDescription;
 import dev.vrba.simp.command.annotation.CommandUsage;
-import dev.vrba.simp.command.fun.animals.endpoints.CatsApiEndpoint;
-import dev.vrba.simp.command.fun.animals.endpoints.DogsApiEndpoint;
-import dev.vrba.simp.command.fun.animals.endpoints.DucksApiEndpoint;
-import dev.vrba.simp.command.fun.animals.endpoints.FoxesApiEndpoint;
+import dev.vrba.simp.command.fun.animals.endpoints.*;
 import dev.vrba.simp.utilities.StatusEmbed;
 import discord4j.core.object.entity.channel.MessageChannel;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +27,8 @@ public class AnimalsCommand implements Command {
             new CatsApiEndpoint(),
             new DogsApiEndpoint(),
             new FoxesApiEndpoint(),
-            new DucksApiEndpoint()
+            new DucksApiEndpoint(),
+            new BirdsApiEndpoint()
     );
 
     // Allows usage of `pls gib another doggo` etc.
