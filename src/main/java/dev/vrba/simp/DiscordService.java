@@ -41,7 +41,8 @@ public class DiscordService {
     }
 
     private Mono<Void> registerCommandHandlers() {
-        String prefix = "pls "; // pls name: [gib] arguments: [10 cattos]
+        Set<String> prefixes = Set.of("pls ", "pla ", "plz "); // pls name: [gib] arguments: [10 cattos]
+
         CommandsRegistry registry = new CommandsRegistry(Set.of(
                 new PingCommand(),
                 new UptimeCommand(),
@@ -53,7 +54,7 @@ public class DiscordService {
         // Help needs access to CommandsRegistry instance
         registry.register(new HelpCommand(registry));
 
-        return new CommandsEventHandler(prefix, registry).register(this.client);
+        return new CommandsEventHandler(prefixes, registry).register(this.client);
     }
 
     private Mono<Void> updatePresence() {
