@@ -24,12 +24,14 @@ public class HelpCommand implements Command {
     }
 
     @Override
-    public @NotNull String getName() {
+    @NotNull
+    public String getName() {
         return "help";
     }
 
     @Override
-    public @NotNull Mono<Void> execute(@NotNull CommandContext context) {
+    @NotNull
+    public Mono<Void> execute(@NotNull CommandContext context) {
         // pls help <command-name>
         if (context.getArguments().size() == 1) {
             return this.registry.findCommandByName(context.getArguments().get(0))
@@ -40,7 +42,8 @@ public class HelpCommand implements Command {
         return this.handleCommandsHelp(context);
     }
 
-    private @NotNull Mono<Void> handleCommandsHelp(@NotNull CommandContext context) {
+    @NotNull
+    private Mono<Void> handleCommandsHelp(@NotNull CommandContext context) {
         String description = this.registry.getRegisteredCommands()
                 .stream()
                 .filter(command -> !command.getClass().isAnnotationPresent(ExcludeFromHelpListing.class))
@@ -54,7 +57,8 @@ public class HelpCommand implements Command {
         );
     }
 
-    private @NotNull Mono<Void> handleCommandHelp(@NotNull Command command, @NotNull CommandContext context) {
+    @NotNull
+    private Mono<Void> handleCommandHelp(@NotNull Command command, @NotNull CommandContext context) {
         return this.createHelpEmbed(
                 context,
                 command.getName() + " command",
@@ -62,7 +66,8 @@ public class HelpCommand implements Command {
         );
     }
 
-    private @NotNull String buildCommandSection(@NotNull Command command, boolean includeName) {
+    @NotNull
+    private String buildCommandSection(@NotNull Command command, boolean includeName) {
         StringBuilder section = new StringBuilder();
 
         if (includeName) {
@@ -90,7 +95,8 @@ public class HelpCommand implements Command {
         return section.toString();
     }
 
-    private @NotNull Mono<Void> createHelpEmbed(@NotNull CommandContext context, @NotNull String title, @NotNull String description) {
+    @NotNull
+    private Mono<Void> createHelpEmbed(@NotNull CommandContext context, @NotNull String title, @NotNull String description) {
         return context.getChannel()
                 .flatMap(channel -> channel.createEmbed(
                         embed -> embed.setTitle(title)

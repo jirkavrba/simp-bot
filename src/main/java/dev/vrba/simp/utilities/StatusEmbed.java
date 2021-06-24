@@ -7,10 +7,12 @@ import reactor.core.publisher.Mono;
 
 public class StatusEmbed {
 
+    @NotNull
     public static Mono<Void> sendError(@NotNull Mono<MessageChannel> publisher, @NotNull String error) {
         return publisher.flatMap(channel -> sendError(channel, error));
     }
 
+    @NotNull
     public static Mono<Void> sendError(@NotNull MessageChannel channel, @NotNull String error) {
         return channel.createEmbed(embed ->
                 embed.setTitle("Uh oh!")

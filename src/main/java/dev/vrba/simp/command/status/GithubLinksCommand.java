@@ -17,12 +17,14 @@ public class GithubLinksCommand implements Command {
     private final static String REPOSITORY_URL = "https://github.com/jirkavrba/simp-bot";
 
     @Override
-    public @NotNull String getName() {
+    @NotNull
+    public String getName() {
         return "github";
     }
 
     @Override
-    public @NotNull Mono<Void> execute(@NotNull CommandContext context) {
+    @NotNull
+    public Mono<Void> execute(@NotNull CommandContext context) {
         return context.getChannel()
                 .flatMap(channel -> channel.createEmbed(
                         embed -> embed.setTitle("Simp bot on Github")

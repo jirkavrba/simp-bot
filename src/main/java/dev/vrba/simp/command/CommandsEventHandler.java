@@ -25,6 +25,7 @@ public class CommandsEventHandler {
         this.logger = Logger.getLogger(this.getClass().getName());
     }
 
+    @NotNull
     public Mono<Void> register(@NotNull GatewayDiscordClient client) {
         return client.on(MessageCreateEvent.class)
                 .filter(this::shouldHandle)
@@ -33,6 +34,7 @@ public class CommandsEventHandler {
                 .then();
     }
 
+    @NotNull
     private Mono<Void> handleError(@NotNull Throwable throwable) {
         this.logger.severe(throwable.getMessage());
         return Mono.empty();

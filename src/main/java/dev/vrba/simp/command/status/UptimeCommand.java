@@ -22,12 +22,14 @@ public class UptimeCommand implements Command {
     }
 
     @Override
-    public @NotNull String getName() {
+    @NotNull
+    public String getName() {
         return "uptime";
     }
 
     @Override
-    public @NotNull Mono<Void> execute(@NotNull CommandContext context) {
+    @NotNull
+    public Mono<Void> execute(@NotNull CommandContext context) {
         Duration uptime = Duration.between(launch, Instant.now());
         String formatted = this.formatDuration(uptime);
 
@@ -38,7 +40,8 @@ public class UptimeCommand implements Command {
                 .then();
     }
 
-    private @NotNull String formatDuration(@NotNull Duration duration) {
+    @NotNull
+    private String formatDuration(@NotNull Duration duration) {
         List<String> parts = List.of(
             plural(duration.toDaysPart(), "day"),
             plural(duration.toHoursPart(), "hour"),
@@ -49,7 +52,8 @@ public class UptimeCommand implements Command {
         return String.join(", ", parts);
     }
 
-    private @NotNull String plural(long count, @NotNull String unit) {
+    @NotNull
+    private String plural(long count, @NotNull String unit) {
         return count + " " + unit + (count == 1 ? "" : "s");
     }
 }

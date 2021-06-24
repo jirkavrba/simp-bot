@@ -23,12 +23,14 @@ import java.util.function.Consumer;
 public class UrbanDictionaryCommand implements Command {
 
     @Override
-    public @NotNull String getName() {
+    @NotNull
+    public String getName() {
         return "urban";
     }
 
     @Override
-    public @NotNull Mono<Void> execute(@NotNull CommandContext context) {
+    @NotNull
+    public Mono<Void> execute(@NotNull CommandContext context) {
         String search = String.join("%20", context.getArguments()).trim();
 
         if (search.isEmpty()) {

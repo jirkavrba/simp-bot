@@ -10,22 +10,26 @@ import java.util.Set;
 public class DucksApiEndpoint extends AnimalApiEndpoint {
 
     @Override
-    public @NotNull Set<String> getNames() {
+    @NotNull
+    public Set<String> getNames() {
         return Set.of("duck", "ducks", "quack", "quacks");
     }
 
     @Override
-    public @NotNull String getUrl() {
+    @NotNull
+    public String getUrl() {
         return "https://random-d.uk/api/v1/random?type=png";
     }
 
     @Override
-    public @NotNull String getTitle() {
+    @NotNull
+    public String getTitle() {
         return "Quack!";
     }
 
     @Override
-    public @NotNull Mono<String> extractImageFromResponse(@NotNull Mono<InputStream> response) {
+    @NotNull
+    public Mono<String> extractImageFromResponse(@NotNull Mono<InputStream> response) {
         return this.extractImageFromJson(response, json -> json.get("url").asText());
     }
 }

@@ -40,6 +40,7 @@ public class DiscordService {
             .block();
     }
 
+    @NotNull
     private Mono<Void> registerCommandHandlers() {
         Set<String> prefixes = Set.of("pls ", "pla ", "plz "); // pls name: [gib] arguments: [10 cattos]
 
@@ -57,6 +58,7 @@ public class DiscordService {
         return new CommandsEventHandler(prefixes, registry).register(this.client);
     }
 
+    @NotNull
     private Mono<Void> updatePresence() {
         return this.client.updatePresence(
                 StatusUpdate.builder()

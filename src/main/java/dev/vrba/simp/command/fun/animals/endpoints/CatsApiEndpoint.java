@@ -25,27 +25,32 @@ public class CatsApiEndpoint extends AnimalApiEndpoint {
     }
 
     @Override
-    public @NotNull Set<String> getNames() {
+    @NotNull
+    public Set<String> getNames() {
         return Set.of("cat", "cats", "catto", "cattos", "pussy", "pussies", "kitty", "kitties", "kitten");
     }
 
     @Override
-    public @NotNull String getUrl() {
+    @NotNull
+    public String getUrl() {
         return "https://api.thecatapi.com/v1/images/search";
     }
 
     @Override
-    public @NotNull String getTitle() {
+    @NotNull
+    public String getTitle() {
         return "Meow";
     }
 
     @Override
-    public @NotNull Map<String, String> getHeaders() {
+    @NotNull
+    public Map<String, String> getHeaders() {
         return Map.of("x-api-key", key);
     }
 
     @Override
-    public @NotNull Mono<String> extractImageFromResponse(@NotNull Mono<InputStream> response) {
+    @NotNull
+    public Mono<String> extractImageFromResponse(@NotNull Mono<InputStream> response) {
         return this.extractImageFromJson(response, json->json.get(0).get("url").asText());
     }
 }
