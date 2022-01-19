@@ -24,7 +24,7 @@ public class StatusCommandModule : ModuleBase<SocketCommandContext>
     public async Task GithubCommandAsync()
     {
         await ReplyAsync(
-            message: "https://github.com/jirkavrba/simp-bot",
+            "https://github.com/jirkavrba/simp-bot 🥺👉👈",
             components: new ComponentBuilder()
                 .WithButton("📜 Source code", url: "https://github.com/jirkavrba/simp-bot", style: ButtonStyle.Link)
                 .WithButton("🪲 Report a bug", url: "https://github.com/jirkavrba/simp-bot/issues/new", style: ButtonStyle.Link)
