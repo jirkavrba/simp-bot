@@ -11,15 +11,24 @@ public class DiscordBotService : BackgroundService
 
     private readonly IConfiguration _configuration;
 
+    private readonly IServiceProvider _services;
+
     private readonly DiscordSocketClient _client;
 
     private readonly CommandService _commands;
 
-    public DiscordBotService(ILogger<DiscordBotService> logger, IConfiguration configuration, CommandService commands)
+    public DiscordBotService(
+        ILogger<DiscordBotService> logger,
+        IConfiguration configuration,
+        IServiceProvider services,
+        CommandService commands
+    )
     {
         _logger = logger;
         _configuration = configuration;
+        _services = services;
         _commands = commands;
+        
         _client = new DiscordSocketClient(
             new DiscordSocketConfig()
             {
@@ -36,7 +45,7 @@ public class DiscordBotService : BackgroundService
         _client.Ready += UpdateBotPresence;
         _client.MessageReceived += HandleCommandAsync;
 
-        await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), null);
+        await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
 
         await _client.LoginAsync(TokenType.Bot, token);
         await _client.StartAsync();
@@ -64,7 +73,7 @@ public class DiscordBotService : BackgroundService
         )
         {
             var context = new SocketCommandContext(_client, userMessage);
-            await _commands.ExecuteAsync(context, offset, null);
+            await _commands.ExecuteAsync(context, offset, _services);
         }
     }
 }
