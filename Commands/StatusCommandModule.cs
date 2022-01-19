@@ -6,7 +6,8 @@ namespace SimpBot.Commands;
 public class StatusCommandModule : ModuleBase<SocketCommandContext>
 {
     [Command("ping")]
-    public async Task PingAsync()
+    [Summary("Check if the bot is running and connected to the Discord gateway")]
+    public async Task PingCommandAsync()
     {
         await ReplyAsync(embed: new EmbedBuilder()
             .WithTitle("🏓 Pong!")
@@ -15,6 +16,19 @@ public class StatusCommandModule : ModuleBase<SocketCommandContext>
             .WithFooter(Context.User.Username, Context.User.GetAvatarUrl())
             .WithCurrentTimestamp()
             .Build()
+        );
+    }
+
+    [Command("github")]
+    [Summary("Provides information about the bot Github repository")]
+    public async Task GithubCommandAsync()
+    {
+        await ReplyAsync(
+            message: "https://github.com/jirkavrba/simp-bot",
+            components: new ComponentBuilder()
+                .WithButton("📜 Source code", url: "https://github.com/jirkavrba/simp-bot", style: ButtonStyle.Link)
+                .WithButton("🪲 Report a bug", url: "https://github.com/jirkavrba/simp-bot/issues/new", style: ButtonStyle.Link)
+                .Build()
         );
     }
 }
