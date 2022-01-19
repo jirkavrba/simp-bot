@@ -1,4 +1,6 @@
+using System.Reflection;
 using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 
 namespace SimpBot;
@@ -11,10 +13,13 @@ public class DiscordBotService : BackgroundService
 
     private readonly DiscordSocketClient _client;
 
-    public DiscordBotService(ILogger<DiscordBotService> logger, IConfiguration configuration)
+    private readonly CommandService _commands;
+
+    public DiscordBotService(ILogger<DiscordBotService> logger, IConfiguration configuration, CommandService commands)
     {
         _logger = logger;
         _configuration = configuration;
+        _commands = commands;
         _client = new DiscordSocketClient(
             new DiscordSocketConfig()
             {
@@ -29,6 +34,9 @@ public class DiscordBotService : BackgroundService
         var token = _configuration["Token"] ?? "Please set up the correct token";
 
         _client.Ready += UpdateBotPresence;
+        _client.MessageReceived += HandleCommandAsync;
+
+        await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), null);
 
         await _client.LoginAsync(TokenType.Bot, token);
         await _client.StartAsync();
@@ -38,5 +46,25 @@ public class DiscordBotService : BackgroundService
     private async Task UpdateBotPresence()
     {
         await _client.SetGameAsync("with animal APIs");
+    }
+
+    private async Task HandleCommandAsync(SocketMessage message)
+    {
+        // Do not handle system and bot messages
+        if (message is not SocketUserMessage userMessage || userMessage.Author.IsBot)
+        {
+            return;
+        }
+
+        var offset = 0;
+
+        if (
+            userMessage.HasStringPrefix("pls ", ref offset) ||
+            userMessage.HasMentionPrefix(_client.CurrentUser, ref offset)
+        )
+        {
+            var context = new SocketCommandContext(_client, userMessage);
+            await _commands.ExecuteAsync(context, offset, null);
+        }
     }
 }
