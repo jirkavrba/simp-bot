@@ -1,4 +1,6 @@
+using Discord;
 using Discord.Commands;
+using SimpBot.Exceptions;
 using SimpBot.Extensions;
 using SimpBot.Services;
 
@@ -32,10 +34,10 @@ public class FunCommandsModule : ModuleBase<SocketCommandContext>
         // pls gib cat
         if (filtered.Length == 1)
         {
-            await CallImageApiAsync(1, filtered[0]);
+            await CallImageApiAsync(filtered[0], 1);
             return;
         }
-        
+
         // pls gib 10 cats
         if (!int.TryParse(filtered[0], out var count))
         {
@@ -48,12 +50,41 @@ public class FunCommandsModule : ModuleBase<SocketCommandContext>
             await Context.ReplyError("Uh oh!", "Bruh, please choose a number between 1 and 10.");
             return;
         }
-        
-        await CallImageApiAsync(count, filtered[1]);
+
+        await CallImageApiAsync(filtered[1], count);
     }
 
-    private async Task CallImageApiAsync(int count, string endpoint)
+    private async Task CallImageApiAsync(string name, int count)
     {
-        await ReplyAsync($"Handling {count}x {endpoint}");
+        try
+        {
+            var endpoint = _api.FindEndpoint(name);
+            var urls = await _api.FetchImageUrls(endpoint, count);
+            var embeds = urls.Select(
+                    url => new EmbedBuilder()
+                        .WithTitle(endpoint.Title)
+                        .WithColor(endpoint.Color)
+                        .WithImageUrl(url)
+                        .WithCurrentTimestamp()
+                        .WithAuthor(Context.User.Username, Context.User.GetAvatarUrl())
+                        .Build()
+                )
+                .ToArray();
+
+            await Context.Message.ReplyAsync(embeds: embeds);
+        }
+        catch (ImageEndpointNotFoundException)
+        {
+            var endpoints = string.Join('\n', _api.Endpoints
+                .Select(e => e.Names)
+                .Select(e => e.Select(n => $"**{n}**"))
+                .Select(e => "• " + string.Join(", ", e))
+            );
+
+            await Context.ReplyError(
+                "I don't know this endpoint!",
+                $"Choose one of the following:\n {endpoints}"
+            );
+        }
     }
 }
