@@ -11,6 +11,11 @@ public abstract class ImageApiEndpoint
     /// The API url endpoint
     /// </summary>
     public abstract string Url { get; }
+    
+    /// <summary>
+    /// Optional description displayed in the embed footer
+    /// </summary>
+    public virtual string? Description => null;
 
     /// <summary>
     /// Color of the Discord embed 

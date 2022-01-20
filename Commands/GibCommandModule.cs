@@ -65,6 +65,7 @@ public class FunCommandsModule : ModuleBase<SocketCommandContext>
                     url => new EmbedBuilder()
                         .WithColor(endpoint.Color)
                         .WithImageUrl(url)
+                        .WithFooter(endpoint.Description)
                         .Build()
                 )
                 .ToArray();
