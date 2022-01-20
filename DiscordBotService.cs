@@ -63,6 +63,7 @@ public class DiscordBotService : BackgroundService
 
         if (
             userMessage.HasStringPrefix("pls ", ref offset) ||
+            userMessage.HasStringPrefix("Pls ", ref offset) ||
             userMessage.HasMentionPrefix(_client.CurrentUser, ref offset)
         )
         {
