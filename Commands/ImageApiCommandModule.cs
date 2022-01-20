@@ -6,11 +6,11 @@ using SimpBot.Services;
 
 namespace SimpBot.Commands;
 
-public class FunCommandsModule : ModuleBase<SocketCommandContext>
+public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
 {
     private readonly ImageApiService _api;
 
-    public FunCommandsModule(ImageApiService api)
+    public ImageApiCommandModule(ImageApiService api)
     {
         _api = api;
     }
