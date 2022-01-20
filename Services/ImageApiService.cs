@@ -17,7 +17,8 @@ public class ImageApiService
             new FoxApiEndpoint(),
             new BirdsApiEndpoint(),
             new DogsApiEndpoint(),
-            new DucksApiEndpoint()
+            new DucksApiEndpoint(),
+            new WaifuApiEndpoint()
         };
     }
 
