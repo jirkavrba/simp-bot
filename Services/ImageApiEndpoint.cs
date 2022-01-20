@@ -20,7 +20,7 @@ public abstract class ImageApiEndpoint
     /// <summary>
     /// Color of the Discord embed 
     /// </summary>
-    public virtual uint Color => 0x5865F2;
+    public virtual uint Color => 0x202225;
 
     /// <summary>
     /// HTTP headers that should be passed within the request (eg. Api keys)
