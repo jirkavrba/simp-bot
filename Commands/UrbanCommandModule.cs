@@ -73,9 +73,13 @@ public class UrbanCommandModule : ModuleBase<SocketCommandContext>
 
         var random = new Random();
         var entry = parsed.Definitions.OrderBy(_ => random.Next()).First();
+        
+        var definition = entry.Definition.Replace("[", "").Replace("]", "");
+        var example = "_" + entry.Example.Replace("[", "").Replace("]", "") + "_";
+        
         var embed = new EmbedBuilder()
             .WithTitle(entry.Word)
-            .WithDescription(entry.Definition.Replace("[", "").Replace("]", ""))
+            .WithDescription(definition + "\n\n" + example)
             .WithFooter($"{entry.ThumbsUp} 👍 / {entry.ThumbsDown} 👎")
             .WithTimestamp(entry.WrittenOn)
             .WithColor(0xEFFF00)
