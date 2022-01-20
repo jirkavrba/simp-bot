@@ -18,7 +18,8 @@ public class ImageApiService
     {
         new FoxApiEndpoint(),
         new BirdsApiEndpoint(),
-        new DogsApiEndpoint()
+        new DogsApiEndpoint(),
+        new DucksApiEndpoint()
     };
 
     public ImageApiEndpoint FindEndpoint(string name)
