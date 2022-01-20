@@ -7,6 +7,7 @@ var host = Host.CreateDefaultBuilder(args)
     {
         services.AddSingleton<CommandService>();
         services.AddSingleton<ImageApiService>();
+        services.AddSingleton<StatsTrackingService>();
         services.AddHostedService<DiscordBotService>();
     })
     .Build();

@@ -3,15 +3,19 @@ using System.Text.Json.Serialization;
 using Discord;
 using Discord.Commands;
 using SimpBot.Extensions;
+using SimpBot.Services;
 
 namespace SimpBot.Commands;
 
 public class UrbanCommandModule : ModuleBase<SocketCommandContext>
 {
     private readonly HttpClient _client;
+    
+    private readonly StatsTrackingService _stats;
 
-    public UrbanCommandModule()
+    public UrbanCommandModule(StatsTrackingService stats)
     {
+        _stats = stats;
         _client = new HttpClient();
     }
 
@@ -24,6 +28,8 @@ public class UrbanCommandModule : ModuleBase<SocketCommandContext>
             await Context.ReplyError("No term provided", "Use the command like eg. `pls urban boomer`");
             return;
         }
+        
+        _stats.TrackUsage("command:urban");
 
         var query = term.Replace(" ", "%20");
         var url = "https://api.urbandictionary.com/v0/define?term=" + query;

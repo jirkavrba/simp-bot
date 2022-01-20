@@ -10,9 +10,12 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
 {
     private readonly ImageApiService _api;
 
-    public ImageApiCommandModule(ImageApiService api)
+    private readonly StatsTrackingService _stats;
+
+    public ImageApiCommandModule(ImageApiService api, StatsTrackingService stats)
     {
         _api = api;
+        _stats = stats;
     }
 
     [Command("gib")]
@@ -60,6 +63,9 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
         {
             var endpoint = _api.FindEndpoint(name);
             var urls = await _api.FetchImageUrls(endpoint, count);
+            
+            _stats.TrackUsage("command:gib");
+            _stats.TrackUsage($"endpoint:{endpoint.Names.First()}", count);
 
             var embeds = urls.Select(
                     url => new EmbedBuilder()
