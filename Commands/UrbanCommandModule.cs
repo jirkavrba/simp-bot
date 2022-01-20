@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using Discord;
 using Discord.Commands;
-using Newtonsoft.Json;
 using SimpBot.Extensions;
 
 namespace SimpBot.Commands;
@@ -15,39 +13,6 @@ public class UrbanCommandModule : ModuleBase<SocketCommandContext>
     public UrbanCommandModule()
     {
         _client = new HttpClient();
-    }
-
-    private class UrbanDictionaryDefinition
-    {
-        [JsonPropertyName("definition")] public string Definition { get; }
-        [JsonPropertyName("permalink")] public string Link { get; }
-        [JsonPropertyName("word")] public string Word { get; }
-        [JsonPropertyName("example")] public string Example { get; }
-        [JsonPropertyName("thumbs_up")] public int ThumbsUp { get; }
-        [JsonPropertyName("thumbs_down")] public int ThumbsDown { get; }
-        [JsonPropertyName("written_on")] public DateTime WrittenOn { get; }
-        
-        public UrbanDictionaryDefinition(string definition, string link, string word, string example, int thumbsUp,
-            int thumbsDown, DateTime writtenOn)
-        {
-            Definition = definition;
-            Link = link;
-            Word = word;
-            Example = example;
-            ThumbsUp = thumbsUp;
-            ThumbsDown = thumbsDown;
-            WrittenOn = writtenOn;
-        }
-    }
-
-    private class UrbanDictionaryApiResponse
-    {
-        [JsonPropertyName("list")] public List<UrbanDictionaryDefinition> Definitions { get; }
-        
-        public UrbanDictionaryApiResponse(List<UrbanDictionaryDefinition> definitions)
-        {
-            Definitions = definitions;
-        }
     }
 
     [Command("urban")]
@@ -73,10 +38,10 @@ public class UrbanCommandModule : ModuleBase<SocketCommandContext>
 
         var random = new Random();
         var entry = parsed.Definitions.OrderBy(_ => random.Next()).First();
-        
+
         var definition = entry.Definition.Replace("[", "").Replace("]", "");
         var example = "_" + entry.Example.Replace("[", "").Replace("]", "") + "_";
-        
+
         var embed = new EmbedBuilder()
             .WithTitle(entry.Word)
             .WithDescription(definition + "\n\n" + example)
@@ -89,11 +54,44 @@ public class UrbanCommandModule : ModuleBase<SocketCommandContext>
             .WithStyle(ButtonStyle.Link)
             .WithUrl(entry.Link)
             .WithLabel(entry.Word + " on urbandictionary.com");
-            
+
         var component = new ComponentBuilder()
             .WithButton(button)
             .Build();
 
         await Context.Message.ReplyAsync(embed: embed, components: component);
+    }
+
+    private class UrbanDictionaryDefinition
+    {
+        public UrbanDictionaryDefinition(string definition, string link, string word, string example, int thumbsUp,
+            int thumbsDown, DateTime writtenOn)
+        {
+            Definition = definition;
+            Link = link;
+            Word = word;
+            Example = example;
+            ThumbsUp = thumbsUp;
+            ThumbsDown = thumbsDown;
+            WrittenOn = writtenOn;
+        }
+
+        [JsonPropertyName("definition")] public string Definition { get; }
+        [JsonPropertyName("permalink")] public string Link { get; }
+        [JsonPropertyName("word")] public string Word { get; }
+        [JsonPropertyName("example")] public string Example { get; }
+        [JsonPropertyName("thumbs_up")] public int ThumbsUp { get; }
+        [JsonPropertyName("thumbs_down")] public int ThumbsDown { get; }
+        [JsonPropertyName("written_on")] public DateTime WrittenOn { get; }
+    }
+
+    private class UrbanDictionaryApiResponse
+    {
+        public UrbanDictionaryApiResponse(List<UrbanDictionaryDefinition> definitions)
+        {
+            Definitions = definitions;
+        }
+
+        [JsonPropertyName("list")] public List<UrbanDictionaryDefinition> Definitions { get; }
     }
 }

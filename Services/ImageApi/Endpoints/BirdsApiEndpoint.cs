@@ -4,7 +4,7 @@ namespace SimpBot.Services.Endpoints;
 
 public class BirdsApiEndpoint : ImageApiEndpoint
 {
-    public override IEnumerable<string> Names { get; } = new[] { "bird", "birb", "birds", "birbs" };
+    public override IEnumerable<string> Names { get; } = new[] {"bird", "birb", "birds", "birbs"};
 
     public override string Url => "https://some-random-api.ml/img/birb";
 

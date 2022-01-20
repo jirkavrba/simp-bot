@@ -13,7 +13,8 @@ public class ImageApiService
     {
         Endpoints = new HashSet<ImageApiEndpoint>
         {
-            new CatsApiEndpoint(configuration["CatsApiKey"] ?? throw new ApplicationException("Missing the Cats API key")),
+            new CatsApiEndpoint(configuration["CatsApiKey"] ??
+                                throw new ApplicationException("Missing the Cats API key")),
             new FoxApiEndpoint(),
             new BirdsApiEndpoint(),
             new DogsApiEndpoint(),

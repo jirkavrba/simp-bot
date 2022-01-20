@@ -7,15 +7,13 @@ namespace SimpBot;
 
 public class DiscordBotService : BackgroundService
 {
-    private readonly ILogger<DiscordBotService> _logger;
+    private readonly DiscordSocketClient _client;
+
+    private readonly CommandService _commands;
 
     private readonly IConfiguration _configuration;
 
     private readonly IServiceProvider _services;
-
-    private readonly DiscordSocketClient _client;
-
-    private readonly CommandService _commands;
 
     public DiscordBotService(
         ILogger<DiscordBotService> logger,
@@ -24,13 +22,12 @@ public class DiscordBotService : BackgroundService
         CommandService commands
     )
     {
-        _logger = logger;
         _configuration = configuration;
         _services = services;
         _commands = commands;
-        
+
         _client = new DiscordSocketClient(
-            new DiscordSocketConfig()
+            new DiscordSocketConfig
             {
                 LogLevel = LogSeverity.Debug,
                 LogGatewayIntentWarnings = true
@@ -60,10 +57,7 @@ public class DiscordBotService : BackgroundService
     private async Task HandleCommandAsync(SocketMessage message)
     {
         // Do not handle system and bot messages
-        if (message is not SocketUserMessage userMessage || userMessage.Author.IsBot)
-        {
-            return;
-        }
+        if (message is not SocketUserMessage userMessage || userMessage.Author.IsBot) return;
 
         var offset = 0;
 

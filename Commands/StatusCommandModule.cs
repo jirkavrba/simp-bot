@@ -27,7 +27,8 @@ public class StatusCommandModule : ModuleBase<SocketCommandContext>
             "https://github.com/jirkavrba/simp-bot",
             components: new ComponentBuilder()
                 .WithButton("📜 Source code", url: "https://github.com/jirkavrba/simp-bot", style: ButtonStyle.Link)
-                .WithButton("🪲 Report a bug", url: "https://github.com/jirkavrba/simp-bot/issues/new", style: ButtonStyle.Link)
+                .WithButton("🪲 Report a bug", url: "https://github.com/jirkavrba/simp-bot/issues/new",
+                    style: ButtonStyle.Link)
                 .Build()
         );
     }
