@@ -1,5 +1,3 @@
-using System.Linq;
-using System.Net.Http.Json;
 using SimpBot.Exceptions;
 using SimpBot.Services.Endpoints;
 
@@ -19,7 +17,8 @@ public class ImageApiService
     public IEnumerable<ImageApiEndpoint> Endpoints { get; } = new HashSet<ImageApiEndpoint>
     {
         new FoxApiEndpoint(),
-        new BirdsApiEndpoint()
+        new BirdsApiEndpoint(),
+        new DogsApiEndpoint()
     };
 
     public ImageApiEndpoint FindEndpoint(string name)
