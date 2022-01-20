@@ -9,9 +9,17 @@ public class ImageApiService
 {
     private readonly HttpClient _client = new();
 
+    private readonly IConfiguration _configuration;
+
+    public ImageApiService(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
     public IEnumerable<ImageApiEndpoint> Endpoints { get; } = new HashSet<ImageApiEndpoint>
     {
-        new FoxApiEndpoint()
+        new FoxApiEndpoint(),
+        new BirdsApiEndpoint()
     };
 
     public ImageApiEndpoint FindEndpoint(string name)

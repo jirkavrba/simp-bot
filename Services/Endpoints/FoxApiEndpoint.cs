@@ -7,8 +7,6 @@ public class FoxApiEndpoint : ImageApiEndpoint
     public override IEnumerable<string> Names { get; } = new[] {"fox", "foxxo", "foxes", "foxxos"};
 
     public override string Url => "https://randomfox.ca/floof/";
-
-    public override string Title => "What does the fox say?";
     
     public override uint Color => 0xFC7B03;
 

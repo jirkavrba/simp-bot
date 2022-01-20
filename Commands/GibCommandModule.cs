@@ -60,13 +60,11 @@ public class FunCommandsModule : ModuleBase<SocketCommandContext>
         {
             var endpoint = _api.FindEndpoint(name);
             var urls = await _api.FetchImageUrls(endpoint, count);
+
             var embeds = urls.Select(
                     url => new EmbedBuilder()
-                        .WithTitle(endpoint.Title)
                         .WithColor(endpoint.Color)
                         .WithImageUrl(url)
-                        .WithCurrentTimestamp()
-                        .WithAuthor(Context.User.Username, Context.User.GetAvatarUrl())
                         .Build()
                 )
                 .ToArray();

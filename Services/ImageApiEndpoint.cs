@@ -13,11 +13,6 @@ public abstract class ImageApiEndpoint
     public abstract string Url { get; }
 
     /// <summary>
-    /// Title of the embed that is containing the image
-    /// </summary>
-    public abstract string Title { get; }
-
-    /// <summary>
     /// Color of the Discord embed 
     /// </summary>
     public virtual uint Color => 0x5865F2;
