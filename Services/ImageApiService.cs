@@ -7,20 +7,19 @@ public class ImageApiService
 {
     private readonly HttpClient _client = new();
 
-    private readonly IConfiguration _configuration;
+    public IEnumerable<ImageApiEndpoint> Endpoints { get; }
 
     public ImageApiService(IConfiguration configuration)
     {
-        _configuration = configuration;
+        Endpoints = new HashSet<ImageApiEndpoint>
+        {
+            new CatsApiEndpoint(configuration["CatsApiKey"] ?? throw new ApplicationException("Missing the Cats API key")),
+            new FoxApiEndpoint(),
+            new BirdsApiEndpoint(),
+            new DogsApiEndpoint(),
+            new DucksApiEndpoint()
+        };
     }
-
-    public IEnumerable<ImageApiEndpoint> Endpoints { get; } = new HashSet<ImageApiEndpoint>
-    {
-        new FoxApiEndpoint(),
-        new BirdsApiEndpoint(),
-        new DogsApiEndpoint(),
-        new DucksApiEndpoint()
-    };
 
     public ImageApiEndpoint FindEndpoint(string name)
     {
@@ -44,12 +43,12 @@ public class ImageApiService
 
             foreach (var (name, value) in endpoint.Headers)
             {
-                message.Headers.Add(name, value); 
+                message.Headers.Add(name, value);
             }
 
             var response = await _client.SendAsync(message);
             var url = await endpoint.ExtractImageUrlAsync(response);
-            
+
             return url;
         }
         catch (HttpRequestException)
