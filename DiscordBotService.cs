@@ -19,7 +19,6 @@ public class DiscordBotService : BackgroundService
     private readonly IServiceProvider _services;
 
     public DiscordBotService(
-        ILogger<DiscordBotService> logger,
         IConfiguration configuration,
         IServiceProvider services,
         CommandService commands
@@ -62,7 +61,6 @@ public class DiscordBotService : BackgroundService
         await using var context = provider.GetRequiredService<SimpBotDbContext>();
         
         await context.Database.EnsureCreatedAsync();
-        await context.Database.MigrateAsync();
     }
 
     private async Task UpdateBotPresence()
@@ -76,10 +74,11 @@ public class DiscordBotService : BackgroundService
         if (message is not SocketUserMessage userMessage || userMessage.Author.IsBot) return;
 
         var offset = 0;
+        var prefix = await RetrieveConfiguredPrefixAsync(userMessage);
 
         if (
-            userMessage.HasStringPrefix("pls ", ref offset) ||
-            userMessage.HasStringPrefix("Pls ", ref offset) ||
+            userMessage.HasStringPrefix(prefix, ref offset, StringComparison.OrdinalIgnoreCase) ||
+            userMessage.HasStringPrefix(prefix + " ", ref offset, StringComparison.OrdinalIgnoreCase) ||
             userMessage.HasMentionPrefix(_client.CurrentUser, ref offset)
         )
         {
@@ -91,5 +90,24 @@ public class DiscordBotService : BackgroundService
                 await context.ReplyError("Sorry, there was an error.", result.ErrorReason);
             }
         }
+    }
+
+    private async Task<string> RetrieveConfiguredPrefixAsync(SocketMessage message)
+    {
+       const string fallback = "pls";
+       
+       // If the message was received in DMs
+       if (message.Channel is not IGuildChannel channel)
+       {
+           return fallback;
+       }
+       
+       using var scope = _services.CreateScope();
+       await using var context = scope.ServiceProvider.GetRequiredService<SimpBotDbContext>();
+
+       var guild = channel.Guild.Id;
+       var settings = await context.GuildSettings.FirstOrDefaultAsync(s => s.GuildId == guild);
+
+       return settings?.Prefix ?? fallback;
     }
 }
