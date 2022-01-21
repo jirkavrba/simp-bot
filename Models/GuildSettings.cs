@@ -4,7 +4,6 @@ namespace SimpBot.Models;
 
 public class GuildSettings
 {
-    [Key]
     public uint GuildId { get; }
 
     [Required]
