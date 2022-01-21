@@ -2,6 +2,8 @@ using System.Reflection;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Microsoft.EntityFrameworkCore;
+using SimpBot.Database;
 using SimpBot.Extensions;
 
 namespace SimpBot;
@@ -40,6 +42,8 @@ public class DiscordBotService : BackgroundService
     {
         var token = _configuration["Token"] ?? "Please set up the correct token";
 
+        await UpdateDatabaseAsync();
+
         _client.Ready += UpdateBotPresence;
         _client.MessageReceived += HandleCommandAsync;
 
@@ -48,6 +52,17 @@ public class DiscordBotService : BackgroundService
         await _client.LoginAsync(TokenType.Bot, token);
         await _client.StartAsync();
         await Task.Delay(-1, stoppingToken);
+    }
+
+    private async Task UpdateDatabaseAsync()
+    {
+        var scope = _services.CreateScope();
+        var provider = scope.ServiceProvider;
+
+        await using var context = provider.GetRequiredService<SimpBotDbContext>();
+        
+        await context.Database.EnsureCreatedAsync();
+        await context.Database.MigrateAsync();
     }
 
     private async Task UpdateBotPresence()
