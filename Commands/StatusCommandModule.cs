@@ -8,9 +8,12 @@ public class StatusCommandModule : ModuleBase<SocketCommandContext>
 {
     private readonly StatsTrackingService _tracking;
 
-    public StatusCommandModule(StatsTrackingService tracking)
+    private readonly CommandService _commandService;
+
+    public StatusCommandModule(StatsTrackingService tracking, CommandService commandService)
     {
         _tracking = tracking;
+        _commandService = commandService;
     }
 
     [Command("ping")]
@@ -65,5 +68,37 @@ public class StatusCommandModule : ModuleBase<SocketCommandContext>
             .Build();
 
         await Context.Message.ReplyAsync(embed: embed);
+    }
+
+    [Command("help")]
+    [Summary("Provides this command listing with descriptions")]
+    public async Task HelpCommand()
+    {
+        var commands = _commandService.Commands.ToList();
+        var embed = new EmbedBuilder()
+            .WithTitle("Here is the list of all commands that I know")
+            .WithAuthor(Context.User.Username, Context.User.GetAvatarUrl())
+            .WithFooter("If you have an idea for command, please open an issue on Github")
+            .WithCurrentTimestamp();
+        
+        commands.ForEach(command => embed.AddField(command.Name, command.Summary ?? "_No description provided_"));
+        
+        var components = new ComponentBuilder()
+            .WithButton(new ButtonBuilder()
+                .WithLabel("💡 Suggest an idea")
+                .WithUrl("https://github.com/jirkavrba/simp-bot/issues/new")
+                .WithStyle(ButtonStyle.Link)
+            )
+            .WithButton(new ButtonBuilder()
+                .WithLabel("🪲 Report a bug")
+                .WithUrl("https://github.com/jirkavrba/simp-bot/issues/new")
+                .WithStyle(ButtonStyle.Link)
+            )
+            .Build();
+        
+        await Context.Message.ReplyAsync(
+            embed: embed.Build(),
+            components: components
+        );
     }
 }

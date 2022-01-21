@@ -19,6 +19,7 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
     }
 
     [Command("gib")]
+    [Summary("Downloads and posts image from various API endpoints.\nTo list all available endpoints, use `pls gib`")]
     public async Task ImageApiCommand([Remainder] string? parameters = null)
     {
         if (string.IsNullOrWhiteSpace(parameters))
