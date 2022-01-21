@@ -2,6 +2,7 @@ using System.Reflection;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using SimpBot.Extensions;
 
 namespace SimpBot;
 
@@ -68,7 +69,12 @@ public class DiscordBotService : BackgroundService
         )
         {
             var context = new SocketCommandContext(_client, userMessage);
-            await _commands.ExecuteAsync(context, offset, _services);
+            var result = await _commands.ExecuteAsync(context, offset, _services);
+
+            if (!result.IsSuccess && result.Error != CommandError.UnknownCommand)
+            {
+                await context.ReplyError("Sorry, there was an error.", result.ErrorReason);
+            }
         }
     }
 }
