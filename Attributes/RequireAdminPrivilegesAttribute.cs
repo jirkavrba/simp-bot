@@ -3,7 +3,7 @@ using Discord.Commands;
 
 namespace SimpBot.Attributes;
 
-public class RequiresAdminPrivilegesAttribute : PreconditionAttribute
+public class RequireAdminPrivilegesAttribute : PreconditionAttribute
 {
     public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
     {

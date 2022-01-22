@@ -18,7 +18,8 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
         _stats = stats;
     }
 
-    [Command("gib")]
+    [Command("image")]
+    [Alias("images", "gib", "give", "pic", "pics")]
     [Summary("Downloads and posts image from various API endpoints.\nTo list all available endpoints, use `pls gib`")]
     public async Task ImageApiCommand([Remainder] string? parameters = null)
     {
@@ -29,7 +30,7 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
         }
 
         // Allows for the usage of `pls gib another cat` etc.
-        var extra = new[] {"a", "some", "another", "me", "more"};
+        var extra = new[] {"a", "some", "another", "me", "more", "of"};
         var filtered = parameters.Split(" ")
             .Select(p => p.Trim().ToLower())
             .Where(p => !extra.Contains(p))

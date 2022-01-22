@@ -4,9 +4,12 @@ namespace SimpBot.Models;
 
 public class GuildSettings
 {
-    public uint GuildId { get; }
+    public int Id { get; set; }
+    
+    [Required]
+    public ulong GuildId { get; init; }
 
     [Required]
     [MinLength(1)]
-    public string? Prefix => null;
+    public string? Prefix { get; set; }
 }

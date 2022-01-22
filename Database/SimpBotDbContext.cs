@@ -6,7 +6,7 @@ namespace SimpBot.Database;
 #nullable disable
 public class SimpBotDbContext : DbContext
 {
-    public DbSet<GuildSettings> GuildSettings { get; }
+    public virtual DbSet<GuildSettings> GuildSettings { get; set; }
 
     public SimpBotDbContext(DbContextOptions<SimpBotDbContext> options) : base(options)
     {
@@ -15,7 +15,8 @@ public class SimpBotDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder model)
     {
         base.OnModelCreating(model);
-        
-        model.Entity<GuildSettings>().HasKey(s => s.GuildId);
+
+        model.Entity<GuildSettings>().HasKey(s => s.Id);
+        model.Entity<GuildSettings>().HasIndex(s => s.GuildId);
     }
 }

@@ -11,8 +11,8 @@ using SimpBot.Database;
 namespace SimpBot.Migrations
 {
     [DbContext(typeof(SimpBotDbContext))]
-    [Migration("20220121212125_InitialGuildSettings")]
-    partial class InitialGuildSettings
+    [Migration("20220122094910_GuildSettings")]
+    partial class GuildSettings
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,13 +25,22 @@ namespace SimpBot.Migrations
 
             modelBuilder.Entity("SimpBot.Models.GuildSettings", b =>
                 {
-                    b.Property<long>("GuildId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("GuildId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.HasKey("GuildId");
+                    b.Property<decimal>("GuildId")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<string>("Prefix")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GuildId");
 
                     b.ToTable("GuildSettings");
                 });
