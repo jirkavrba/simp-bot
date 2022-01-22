@@ -10,10 +10,11 @@ var host = Host.CreateDefaultBuilder(args)
         var provider = services.BuildServiceProvider();
         var configuration = provider.GetRequiredService<IConfiguration>();
         
+        services.AddHostedService<DiscordBotService>();
         services.AddSingleton<CommandService>();
         services.AddSingleton<ImageApiService>();
         services.AddSingleton<StatsTrackingService>();
-        services.AddHostedService<DiscordBotService>();
+        services.AddSingleton<SimpBotDbContextFactory>();
         services.AddDbContext<SimpBotDbContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("Default"));

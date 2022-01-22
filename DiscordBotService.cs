@@ -14,6 +14,8 @@ public class DiscordBotService : BackgroundService
 
     private readonly CommandService _commands;
 
+    private readonly SimpBotDbContextFactory _dbContextFactory;
+
     private readonly IConfiguration _configuration;
 
     private readonly IServiceProvider _services;
@@ -21,12 +23,14 @@ public class DiscordBotService : BackgroundService
     public DiscordBotService(
         IConfiguration configuration,
         IServiceProvider services,
-        CommandService commands
+        CommandService commands,
+        SimpBotDbContextFactory dbContextFactory
     )
     {
         _configuration = configuration;
         _services = services;
         _commands = commands;
+        _dbContextFactory = dbContextFactory;
 
         _client = new DiscordSocketClient(
             new DiscordSocketConfig
@@ -55,11 +59,7 @@ public class DiscordBotService : BackgroundService
 
     private async Task UpdateDatabaseAsync()
     {
-        var scope = _services.CreateScope();
-        var provider = scope.ServiceProvider;
-
-        await using var context = provider.GetRequiredService<SimpBotDbContext>();
-        
+        await using var context = _dbContextFactory.GetDbContext();
         await context.Database.EnsureCreatedAsync();
     }
 
@@ -77,8 +77,8 @@ public class DiscordBotService : BackgroundService
         var prefix = await RetrieveConfiguredPrefixAsync(userMessage);
 
         if (
-            userMessage.HasStringPrefix(prefix, ref offset, StringComparison.OrdinalIgnoreCase) ||
             userMessage.HasStringPrefix(prefix + " ", ref offset, StringComparison.OrdinalIgnoreCase) ||
+            userMessage.HasStringPrefix(prefix, ref offset, StringComparison.OrdinalIgnoreCase) ||
             userMessage.HasMentionPrefix(_client.CurrentUser, ref offset)
         )
         {
@@ -102,8 +102,7 @@ public class DiscordBotService : BackgroundService
            return fallback;
        }
        
-       using var scope = _services.CreateScope();
-       await using var context = scope.ServiceProvider.GetRequiredService<SimpBotDbContext>();
+       await using var context = _dbContextFactory.GetDbContext();
 
        var guild = channel.Guild.Id;
        var settings = await context.GuildSettings.FirstOrDefaultAsync(s => s.GuildId == guild);
