@@ -82,10 +82,38 @@ public class ManagementCommandsModule : ModuleBase<SocketCommandContext>
         await bot.ModifyAsync(b => b.Nickname = nickname);
     }
 
+    [RequireContext(ContextType.Guild)]
+    [Command("features")]
+    public async Task FeaturesCommandAsync()
+    {
+        await using var context = _dbContextFactory.GetDbContext();
+
+        var guild = Context.Guild.Id;
+        var settings = await context.GuildSettings.FirstOrDefaultAsync(g => g.GuildId == guild)
+                       ?? new GuildSettings {GuildId = guild};
+
+        var embed = new EmbedBuilder()
+            .WithTitle("Feature flags")
+            .WithColor(0x5865F2)
+            .WithAuthor(Context.User.Username, Context.User.GetAvatarUrl())
+            .WithCurrentTimestamp()
+            .WithDescription($"These settings are specific to **{Context.Guild.Name}**");
+        
+        foreach (var (key, flag) in _flags)
+        {
+            var enabled = (settings.EnabledFeatures & flag) == flag;
+            var label = enabled ? "🟢 Enabled" : "🔴 Disabled";
+
+            embed.AddField(key, label);
+        }
+
+        await Context.Message.ReplyAsync(embed: embed.Build());
+    }
+
     [RequireAdminPrivileges]
     [RequireContext(ContextType.Guild)]
     [Command("enable")]
-    public async Task EnableFeatureFlag(string key)
+    public async Task EnableFeatureFlagCommandAsync(string key)
     {
         if (!_flags.ContainsKey(key))
         {
@@ -117,7 +145,7 @@ public class ManagementCommandsModule : ModuleBase<SocketCommandContext>
     [RequireAdminPrivileges]
     [RequireContext(ContextType.Guild)]
     [Command("disable")]
-    public async Task DisableFeatureFlag(string key)
+    public async Task DisableFeatureFlagCommandAsync(string key)
     {
         if (!_flags.ContainsKey(key))
         {
