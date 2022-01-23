@@ -1,6 +1,8 @@
 using Discord;
 using Discord.Commands;
+using Microsoft.EntityFrameworkCore;
 using SimpBot.Attributes;
+using SimpBot.Database;
 using SimpBot.Exceptions;
 using SimpBot.Extensions;
 using SimpBot.Models;
@@ -14,10 +16,13 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
 
     private readonly StatsTrackingService _stats;
 
-    public ImageApiCommandModule(ImageApiService api, StatsTrackingService stats)
+    private readonly SimpBotDbContextFactory _factory;
+
+    public ImageApiCommandModule(ImageApiService api, StatsTrackingService stats, SimpBotDbContextFactory factory)
     {
         _api = api;
         _stats = stats;
+        _factory = factory;
     }
 
     [Command("image")]
@@ -67,6 +72,17 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
         try
         {
             var endpoint = _api.FindEndpoint(name);
+            var enabled = await CheckNsfwEndpoint(endpoint);
+
+            if (!enabled)
+            {
+                await Context.ReplyErrorAsync(
+                    "Sorry, this endpoint is NSFW.",
+                    "Either the `nsfw` feature is disabled for this guild,\n or you're using this command in a non-NSFW channel"
+                );
+                return;
+            }
+            
             var urls = await _api.FetchImageUrls(endpoint, count);
             
             _stats.TrackUsage("command:gib");
@@ -96,5 +112,32 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
                 $"Choose one of the following:\n {endpoints}"
             );
         }
+    }
+
+    private async Task<bool> CheckNsfwEndpoint(ImageApiEndpoint endpoint)
+    {
+        if (!endpoint.IsNsfw || Context.Guild == null)
+        {
+            return true;
+        }
+
+        // Using nsfw endpoint in a sfw channel
+        var channel = Context.Guild.GetTextChannel(Context.Channel.Id);
+        if (!channel.IsNsfw)
+        {
+            return false;
+        }
+
+        await using var context = _factory.GetDbContext();
+
+        var settings = await context.GuildSettings.FirstOrDefaultAsync(s => s.GuildId == Context.Guild.Id);
+        var features = settings?.EnabledFeatures;
+
+        if (features.HasValue)
+        {
+            return (features.Value & GuildFeatureFlag.EnableNsfwImageApiEndpoints) == GuildFeatureFlag.EnableNsfwImageApiEndpoints;
+        }
+
+        return true;
     }
 }
