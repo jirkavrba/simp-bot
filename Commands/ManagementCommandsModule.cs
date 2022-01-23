@@ -131,7 +131,7 @@ public class ManagementCommandsModule : ModuleBase<SocketCommandContext>
         var settings = await context.GuildSettings.FirstOrDefaultAsync(g => g.GuildId == guild)
                        ?? new GuildSettings {GuildId = guild};
 
-        settings.EnabledFeatures &= flag;
+        settings.EnabledFeatures &= ~flag;
         
         context.GuildSettings.Update(settings);
 
