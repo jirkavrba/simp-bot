@@ -1,4 +1,5 @@
 using Discord.Commands;
+using EFCoreSecondLevelCacheInterceptor;
 using Microsoft.EntityFrameworkCore;
 using SimpBot.Database;
 using SimpBot.Models;
@@ -26,8 +27,8 @@ public class RequireEnabledFeatureFlagAttribute : PreconditionAttribute
         await using var db = factory.GetDbContext();
 
         var settings = await db.GuildSettings
-            .Where(s => s.GuildId == context.Guild.Id)
-            .FirstOrDefaultAsync();
+            .Cacheable()
+            .FirstOrDefaultAsync(s => s.GuildId == context.Guild.Id);
 
         if (settings == null)
         {

@@ -2,6 +2,7 @@ using System.Reflection;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using EFCoreSecondLevelCacheInterceptor;
 using Microsoft.EntityFrameworkCore;
 using SimpBot.Database;
 using SimpBot.Extensions;
@@ -105,7 +106,7 @@ public class DiscordBotService : BackgroundService
        await using var context = _dbContextFactory.GetDbContext();
 
        var guild = channel.Guild.Id;
-       var settings = await context.GuildSettings.FirstOrDefaultAsync(s => s.GuildId == guild);
+       var settings = await context.GuildSettings.Cacheable().FirstOrDefaultAsync(s => s.GuildId == guild);
 
        return settings?.Prefix ?? fallback;
     }

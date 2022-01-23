@@ -1,4 +1,5 @@
 using Discord.Commands;
+using EFCoreSecondLevelCacheInterceptor;
 using Microsoft.EntityFrameworkCore;
 using SimpBot;
 using SimpBot.Database;
@@ -15,6 +16,7 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddSingleton<ImageApiService>();
         services.AddSingleton<StatsTrackingService>();
         services.AddSingleton<SimpBotDbContextFactory>();
+        services.AddEFSecondLevelCache(options => options.UseMemoryCacheProvider().DisableLogging());
         services.AddDbContext<SimpBotDbContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("Default"));

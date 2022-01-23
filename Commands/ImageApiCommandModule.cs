@@ -1,5 +1,6 @@
 using Discord;
 using Discord.Commands;
+using EFCoreSecondLevelCacheInterceptor;
 using Microsoft.EntityFrameworkCore;
 using SimpBot.Attributes;
 using SimpBot.Database;
@@ -130,7 +131,7 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
 
         await using var context = _factory.GetDbContext();
 
-        var settings = await context.GuildSettings.FirstOrDefaultAsync(s => s.GuildId == Context.Guild.Id);
+        var settings = await context.GuildSettings.Cacheable().FirstOrDefaultAsync(s => s.GuildId == Context.Guild.Id);
         var features = settings?.EnabledFeatures;
 
         if (features.HasValue)
