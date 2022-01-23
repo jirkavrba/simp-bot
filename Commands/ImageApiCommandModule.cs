@@ -28,7 +28,7 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
     {
         if (string.IsNullOrWhiteSpace(parameters))
         {
-            await Context.ReplyError("Uh oh!", "Missing the endpoint parameter");
+            await Context.ReplyErrorAsync("Uh oh!", "Missing the endpoint parameter");
             return;
         }
 
@@ -49,13 +49,13 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
         // pls gib 10 cats
         if (!int.TryParse(filtered[0], out var count))
         {
-            await Context.ReplyError("Uh oh!", "Bruh, that's not even a valid number.");
+            await Context.ReplyErrorAsync("Uh oh!", "Bruh, that's not even a valid number.");
             return;
         }
 
         if (count is <= 0 or > 10)
         {
-            await Context.ReplyError("Uh oh!", "Bruh, please choose a number between 1 and 10.");
+            await Context.ReplyErrorAsync("Uh oh!", "Bruh, please choose a number between 1 and 10.");
             return;
         }
 
@@ -91,7 +91,7 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
                 .Select(e => "• " + string.Join(", ", e))
             );
 
-            await Context.ReplyError(
+            await Context.ReplyErrorAsync(
                 "I don't know this endpoint!",
                 $"Choose one of the following:\n {endpoints}"
             );

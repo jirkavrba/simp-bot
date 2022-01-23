@@ -11,7 +11,7 @@ public class GuildSettings
 
     [Required]
     [MinLength(1)]
-    public string? Prefix { get; set; }
+    public string? Prefix { get; set; } = "pls";
 
     [Required]
     public GuildFeatureFlag EnabledFeatures { get; set; } = GuildFeatureFlag.EnableImageApi | GuildFeatureFlag.EnableUrbanDictionary;

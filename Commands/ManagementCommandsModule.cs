@@ -4,6 +4,7 @@ using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
 using SimpBot.Attributes;
 using SimpBot.Database;
+using SimpBot.Extensions;
 using SimpBot.Models;
 
 namespace SimpBot.Commands;
@@ -11,6 +12,14 @@ namespace SimpBot.Commands;
 public class ManagementCommandsModule : ModuleBase<SocketCommandContext>
 {
     private readonly SimpBotDbContextFactory _dbContextFactory;
+
+    private readonly IDictionary<string, GuildFeatureFlag> _flags = new Dictionary<string, GuildFeatureFlag>
+    {
+        {"images", GuildFeatureFlag.EnableImageApi},
+        {"nsfw", GuildFeatureFlag.EnableNsfwImageApiEndpoints},
+        {"urban", GuildFeatureFlag.EnableUrbanDictionary}
+    };
+
 
     public ManagementCommandsModule(SimpBotDbContextFactory dbContextFactory)
     {
@@ -68,7 +77,71 @@ public class ManagementCommandsModule : ModuleBase<SocketCommandContext>
 
         var bot = Context.Guild.GetUser(Context.Client.CurrentUser.Id);
         var nickname = replacement == "pls" ? "Simp Bot" : $"Simp bot [{replacement}]";
-        
+
         await bot.ModifyAsync(b => b.Nickname = nickname);
+    }
+
+    [RequireAdminPrivileges]
+    [RequireContext(ContextType.Guild)]
+    [Command("enable")]
+    public async Task EnableFeatureFlag(string key)
+    {
+        if (!_flags.ContainsKey(key))
+        {
+            var flags = string.Join("\n", _flags.Keys.Select(f => $"• `{f}`"));
+            await Context.ReplyErrorAsync("Unknown feature flag", $"Available flags are:\n{flags}");
+        }
+
+        await using var context = _dbContextFactory.GetDbContext();
+
+        var flag = _flags[key];
+        var guild = Context.Guild.Id;
+        var settings = await context.GuildSettings.FirstOrDefaultAsync(g => g.GuildId == guild)
+                       ?? new GuildSettings {GuildId = guild};
+
+        settings.EnabledFeatures |= flag;
+        
+        context.GuildSettings.Update(settings);
+
+        await context.SaveChangesAsync();
+        await Context.Message.ReplyAsync(embed: new EmbedBuilder()
+            .WithTitle($"Feature flag `{key}` enabled")
+            .WithColor(0x57F287)
+            .WithAuthor(Context.User.Username, Context.User.GetAvatarUrl())
+            .WithCurrentTimestamp()
+            .Build()
+        );
+    }
+    
+    [RequireAdminPrivileges]
+    [RequireContext(ContextType.Guild)]
+    [Command("disable")]
+    public async Task DisableFeatureFlag(string key)
+    {
+        if (!_flags.ContainsKey(key))
+        {
+            var flags = string.Join("\n", _flags.Keys.Select(f => $"• `{f}`"));
+            await Context.ReplyErrorAsync("Unknown feature flag", $"Available flags are:\n{flags}");
+        }
+
+        await using var context = _dbContextFactory.GetDbContext();
+
+        var flag = _flags[key];
+        var guild = Context.Guild.Id;
+        var settings = await context.GuildSettings.FirstOrDefaultAsync(g => g.GuildId == guild)
+                       ?? new GuildSettings {GuildId = guild};
+
+        settings.EnabledFeatures &= flag;
+        
+        context.GuildSettings.Update(settings);
+
+        await context.SaveChangesAsync();
+        await Context.Message.ReplyAsync(embed: new EmbedBuilder()
+            .WithTitle($"Feature flag `{key}` disabled")
+            .WithColor(0xED4245)
+            .WithAuthor(Context.User.Username, Context.User.GetAvatarUrl())
+            .WithCurrentTimestamp()
+            .Build()
+        );
     }
 }

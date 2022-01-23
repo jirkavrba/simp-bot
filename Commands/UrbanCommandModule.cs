@@ -28,7 +28,7 @@ public class UrbanCommandModule : ModuleBase<SocketCommandContext>
     {
         if (string.IsNullOrWhiteSpace(term))
         {
-            await Context.ReplyError("No term provided", "Use the command like eg. `pls urban boomer`");
+            await Context.ReplyErrorAsync("No term provided", "Use the command like eg. `pls urban boomer`");
             return;
         }
         
@@ -41,7 +41,7 @@ public class UrbanCommandModule : ModuleBase<SocketCommandContext>
 
         if (parsed == null || parsed.Definitions.Count == 0)
         {
-            await Context.ReplyError("The urban API returned no results", "Try searching for something else");
+            await Context.ReplyErrorAsync("The urban API returned no results", "Try searching for something else");
             return;
         }
 

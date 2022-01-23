@@ -87,7 +87,7 @@ public class DiscordBotService : BackgroundService
 
             if (!result.IsSuccess && result.Error != CommandError.UnknownCommand)
             {
-                await context.ReplyError("Sorry, there was an error.", result.ErrorReason);
+                await context.ReplyErrorAsync("Sorry, there was an error.", result.ErrorReason);
             }
         }
     }
