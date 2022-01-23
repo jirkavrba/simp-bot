@@ -2,7 +2,9 @@ using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using Discord;
 using Discord.Commands;
+using SimpBot.Attributes;
 using SimpBot.Extensions;
+using SimpBot.Models;
 using SimpBot.Services;
 
 namespace SimpBot.Commands;
@@ -21,6 +23,7 @@ public class UrbanCommandModule : ModuleBase<SocketCommandContext>
 
     [Command("urban")]
     [Summary("Searches for the requested term on https://urbandictionary.com")]
+    [RequireEnabledFeatureFlag(GuildFeatureFlag.EnableUrbanDictionary)]
     public async Task UrbanCommandAsync([Remainder] string? term = null)
     {
         if (string.IsNullOrWhiteSpace(term))

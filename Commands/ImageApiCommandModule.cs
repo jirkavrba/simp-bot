@@ -1,7 +1,9 @@
 using Discord;
 using Discord.Commands;
+using SimpBot.Attributes;
 using SimpBot.Exceptions;
 using SimpBot.Extensions;
+using SimpBot.Models;
 using SimpBot.Services;
 
 namespace SimpBot.Commands;
@@ -21,6 +23,7 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
     [Command("image")]
     [Alias("images", "gib", "give", "pic", "pics")]
     [Summary("Downloads and posts image from various API endpoints.\nTo list all available endpoints, use `pls gib`")]
+    [RequireEnabledFeatureFlag(GuildFeatureFlag.EnableImageApi)]
     public async Task ImageApiCommand([Remainder] string? parameters = null)
     {
         if (string.IsNullOrWhiteSpace(parameters))
