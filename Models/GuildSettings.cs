@@ -12,4 +12,7 @@ public class GuildSettings
     [Required]
     [MinLength(1)]
     public string? Prefix { get; set; }
+
+    [Required]
+    public GuildFeatureFlag EnabledFeatures { get; set; } = GuildFeatureFlag.EnableImageApi | GuildFeatureFlag.EnableUrbanDictionary;
 }
