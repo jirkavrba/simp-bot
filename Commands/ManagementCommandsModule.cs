@@ -1,6 +1,7 @@
 using System.Reflection.Metadata.Ecma335;
 using Discord;
 using Discord.Commands;
+using EFCoreSecondLevelCacheInterceptor;
 using Microsoft.EntityFrameworkCore;
 using SimpBot.Attributes;
 using SimpBot.Database;
@@ -128,7 +129,7 @@ public class ManagementCommandsModule : ModuleBase<SocketCommandContext>
 
         var flag = _flags[key];
         var guild = Context.Guild.Id;
-        var settings = await context.GuildSettings.FirstOrDefaultAsync(g => g.GuildId == guild)
+        var settings = await context.GuildSettings.Cacheable().FirstOrDefaultAsync(g => g.GuildId == guild)
                        ?? new GuildSettings {GuildId = guild};
 
         settings.EnabledFeatures &= ~flag;
