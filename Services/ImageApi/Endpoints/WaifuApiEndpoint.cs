@@ -4,7 +4,7 @@ namespace SimpBot.Services.Endpoints;
 
 public class WaifuApiEndpoint : ImageApiEndpoint
 {
-    public override IEnumerable<string> Names { get; } = new[] {"waifu", "cringe"};
+    public override IEnumerable<string> Names { get; } = new[] {"waifu", "waifus"};
 
     public override string Url => "https://api.waifu.pics/sfw/waifu";
 
