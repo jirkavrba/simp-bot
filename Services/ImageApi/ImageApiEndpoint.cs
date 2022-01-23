@@ -18,6 +18,11 @@ public abstract class ImageApiEndpoint
     public virtual string? Description => null;
 
     /// <summary>
+    ///     Whether the endpoint should be only accessible with NSFW feature flag enabled
+    /// </summary>
+    public virtual bool IsNsfw => false;
+
+    /// <summary>
     ///     Color of the Discord embed
     /// </summary>
     public virtual uint Color => 0x202225;

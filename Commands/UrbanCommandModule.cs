@@ -2,7 +2,9 @@ using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using Discord;
 using Discord.Commands;
+using SimpBot.Attributes;
 using SimpBot.Extensions;
+using SimpBot.Models;
 using SimpBot.Services;
 
 namespace SimpBot.Commands;
@@ -21,11 +23,12 @@ public class UrbanCommandModule : ModuleBase<SocketCommandContext>
 
     [Command("urban")]
     [Summary("Searches for the requested term on https://urbandictionary.com")]
+    [RequireEnabledFeatureFlag(GuildFeatureFlag.EnableUrbanDictionary)]
     public async Task UrbanCommandAsync([Remainder] string? term = null)
     {
         if (string.IsNullOrWhiteSpace(term))
         {
-            await Context.ReplyError("No term provided", "Use the command like eg. `pls urban boomer`");
+            await Context.ReplyErrorAsync("No term provided", "Use the command like eg. `pls urban boomer`");
             return;
         }
         
@@ -38,7 +41,7 @@ public class UrbanCommandModule : ModuleBase<SocketCommandContext>
 
         if (parsed == null || parsed.Definitions.Count == 0)
         {
-            await Context.ReplyError("The urban API returned no results", "Try searching for something else");
+            await Context.ReplyErrorAsync("The urban API returned no results", "Try searching for something else");
             return;
         }
 

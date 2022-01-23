@@ -5,7 +5,7 @@ namespace SimpBot.Extensions;
 
 public static class CommandContextExtensions
 {
-    public static async Task ReplyError(this SocketCommandContext context, string title, string description)
+    public static async Task ReplyErrorAsync(this SocketCommandContext context, string title, string description)
     {
         await context.Message.ReplyAsync(
             embed: new EmbedBuilder()
