@@ -22,7 +22,9 @@ public class StatusCommandModule : ModuleBase<SocketCommandContext>
     {
         _tracking.TrackUsage("command:ping");
         
-        await Context.Message.ReplyAsync(embed: new EmbedBuilder()
+        await Context.Message.ReplyAsync(
+            allowedMentions: AllowedMentions.None,
+            embed: new EmbedBuilder()
             .WithTitle("🏓 Pong!")
             .WithColor(0x5865F2)
             .WithDescription("The bot is up and running.")
@@ -40,10 +42,10 @@ public class StatusCommandModule : ModuleBase<SocketCommandContext>
         
         await Context.Message.ReplyAsync(
             "https://github.com/jirkavrba/simp-bot",
+            allowedMentions: AllowedMentions.None,
             components: new ComponentBuilder()
                 .WithButton("📜 Source code", url: "https://github.com/jirkavrba/simp-bot", style: ButtonStyle.Link)
-                .WithButton("🪲 Report a bug", url: "https://github.com/jirkavrba/simp-bot/issues/new",
-                    style: ButtonStyle.Link)
+                .WithButton("🪲 Report a bug", url: "https://github.com/jirkavrba/simp-bot/issues/new", style: ButtonStyle.Link)
                 .Build()
         );
     }
@@ -67,7 +69,10 @@ public class StatusCommandModule : ModuleBase<SocketCommandContext>
             .WithFooter("Usage is tracked since the last restart")
             .Build();
 
-        await Context.Message.ReplyAsync(embed: embed);
+        await Context.Message.ReplyAsync(
+            allowedMentions: AllowedMentions.None,
+            embed: embed
+        );
     }
 
     [Command("help")]
@@ -97,6 +102,7 @@ public class StatusCommandModule : ModuleBase<SocketCommandContext>
             .Build();
         
         await Context.Message.ReplyAsync(
+            allowedMentions: AllowedMentions.None,
             embed: embed.Build(),
             components: components
         );

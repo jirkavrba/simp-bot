@@ -68,7 +68,11 @@ public class UrbanCommandModule : ModuleBase<SocketCommandContext>
             .WithButton(button)
             .Build();
 
-        await Context.Message.ReplyAsync(embed: embed, components: component);
+        await Context.Message.ReplyAsync(
+            allowedMentions: AllowedMentions.None,
+            embed: embed,
+            components: component
+        );
     }
 
     private class UrbanDictionaryDefinition

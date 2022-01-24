@@ -41,13 +41,14 @@ public class ManagementCommandsModule : ModuleBase<SocketCommandContext>
         // pls prefix
         if (string.IsNullOrWhiteSpace(replacement))
         {
-            await Context.Message.ReplyAsync(embed: new EmbedBuilder()
-                .WithTitle($"Current prefix is set to `{prefix}`")
-                .WithDescription(
-                    $"To change the prefix, use `{prefix} prefix something`,\n where `something` is the new prefix.")
-                .WithCurrentTimestamp()
-                .WithFooter(Context.User.Username, Context.User.GetAvatarUrl())
-                .Build()
+            await Context.Message.ReplyAsync(
+                allowedMentions: AllowedMentions.None,
+                embed: new EmbedBuilder()
+                    .WithTitle($"Current prefix is set to `{prefix}`")
+                    .WithDescription($"To change the prefix, use `{prefix} prefix something`,\n where `something` is the new prefix.")
+                    .WithCurrentTimestamp()
+                    .WithFooter(Context.User.Username, Context.User.GetAvatarUrl())
+                    .Build()
             );
             return;
         }
@@ -69,11 +70,13 @@ public class ManagementCommandsModule : ModuleBase<SocketCommandContext>
         }
 
         await context.SaveChangesAsync();
-        await Context.Message.ReplyAsync(embed: new EmbedBuilder()
-            .WithTitle($"Prefix changed to `{replacement}`")
-            .WithCurrentTimestamp()
-            .WithFooter(Context.User.Username, Context.User.GetAvatarUrl())
-            .Build()
+        await Context.Message.ReplyAsync(
+            allowedMentions: AllowedMentions.None,
+            embed: new EmbedBuilder()
+                .WithTitle($"Prefix changed to `{replacement}`")
+                .WithCurrentTimestamp()
+                .WithFooter(Context.User.Username, Context.User.GetAvatarUrl())
+                .Build()
         );
 
         var bot = Context.Guild.GetUser(Context.Client.CurrentUser.Id);
@@ -98,7 +101,7 @@ public class ManagementCommandsModule : ModuleBase<SocketCommandContext>
             .WithAuthor(Context.User.Username, Context.User.GetAvatarUrl())
             .WithCurrentTimestamp()
             .WithDescription($"These settings are specific to **{Context.Guild.Name}**");
-        
+
         foreach (var (key, flag) in _flags)
         {
             var enabled = (settings.EnabledFeatures & flag) == flag;
@@ -107,7 +110,10 @@ public class ManagementCommandsModule : ModuleBase<SocketCommandContext>
             embed.AddField(key, label);
         }
 
-        await Context.Message.ReplyAsync(embed: embed.Build());
+        await Context.Message.ReplyAsync(
+            allowedMentions: AllowedMentions.None,
+            embed: embed.Build()
+        );
     }
 
     [RequireAdminPrivileges]
@@ -129,19 +135,21 @@ public class ManagementCommandsModule : ModuleBase<SocketCommandContext>
                        ?? new GuildSettings {GuildId = guild};
 
         settings.EnabledFeatures |= flag;
-        
+
         context.GuildSettings.Update(settings);
 
         await context.SaveChangesAsync();
-        await Context.Message.ReplyAsync(embed: new EmbedBuilder()
-            .WithTitle($"Feature flag `{key}` enabled")
-            .WithColor(0x57F287)
-            .WithAuthor(Context.User.Username, Context.User.GetAvatarUrl())
-            .WithCurrentTimestamp()
-            .Build()
+        await Context.Message.ReplyAsync(
+            allowedMentions: AllowedMentions.None,
+            embed: new EmbedBuilder()
+                .WithTitle($"Feature flag `{key}` enabled")
+                .WithColor(0x57F287)
+                .WithAuthor(Context.User.Username, Context.User.GetAvatarUrl())
+                .WithCurrentTimestamp()
+                .Build()
         );
     }
-    
+
     [RequireAdminPrivileges]
     [RequireContext(ContextType.Guild)]
     [Command("disable")]
@@ -161,16 +169,18 @@ public class ManagementCommandsModule : ModuleBase<SocketCommandContext>
                        ?? new GuildSettings {GuildId = guild};
 
         settings.EnabledFeatures &= ~flag;
-        
+
         context.GuildSettings.Update(settings);
 
         await context.SaveChangesAsync();
-        await Context.Message.ReplyAsync(embed: new EmbedBuilder()
-            .WithTitle($"Feature flag `{key}` disabled")
-            .WithColor(0xED4245)
-            .WithAuthor(Context.User.Username, Context.User.GetAvatarUrl())
-            .WithCurrentTimestamp()
-            .Build()
+        await Context.Message.ReplyAsync(
+            allowedMentions: AllowedMentions.None,
+            embed: new EmbedBuilder()
+                .WithTitle($"Feature flag `{key}` disabled")
+                .WithColor(0xED4245)
+                .WithAuthor(Context.User.Username, Context.User.GetAvatarUrl())
+                .WithCurrentTimestamp()
+                .Build()
         );
     }
 }

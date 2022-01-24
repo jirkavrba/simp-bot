@@ -98,7 +98,10 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
                 )
                 .ToArray();
 
-            await Context.Message.ReplyAsync(embeds: embeds);
+            await Context.Message.ReplyAsync(
+                allowedMentions: AllowedMentions.None,
+                embeds: embeds
+            );
         }
         catch (ImageEndpointNotFoundException)
         {
