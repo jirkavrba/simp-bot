@@ -8,7 +8,7 @@ public class WaifuApiEndpoint : ImageApiEndpoint
 
     public override string Url => "https://api.waifu.pics/sfw/waifu";
 
-    public override string Description => "Brought to you by Lajtkek and Deno being fucking weebs";
+    public virtual string Description => "Brought to you by Lajtkek and Deno being fucking weebs";
 
     public override bool IsNsfw => true;
     
