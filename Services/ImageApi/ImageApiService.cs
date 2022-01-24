@@ -1,7 +1,7 @@
 using SimpBot.Exceptions;
-using SimpBot.Services.Endpoints;
+using SimpBot.Services.ImageApi.Endpoints;
 
-namespace SimpBot.Services;
+namespace SimpBot.Services.ImageApi;
 
 public class ImageApiService
 {
@@ -13,11 +13,11 @@ public class ImageApiService
     {
         Endpoints = new HashSet<ImageApiEndpoint>
         {
-            new CatsApiEndpoint(configuration["CatsApiKey"] ??
-                                throw new ApplicationException("Missing the Cats API key")),
+            new CatsApiEndpoint(configuration["CatsApiKey"] ?? throw new ApplicationException("Missing the Cats API key")),
             new FoxApiEndpoint(),
             new BirdsApiEndpoint(),
             new DogsApiEndpoint(),
+            new ShibaApiEndpoint(),
             new DucksApiEndpoint(),
             new WaifuApiEndpoint()
         };

@@ -1,6 +1,6 @@
 using System.Net.Http.Json;
 
-namespace SimpBot.Services.Endpoints;
+namespace SimpBot.Services.ImageApi.Endpoints;
 
 public class FoxApiEndpoint : ImageApiEndpoint
 {

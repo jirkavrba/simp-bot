@@ -1,4 +1,4 @@
-namespace SimpBot.Services;
+namespace SimpBot.Services.ImageApi;
 
 public abstract class ImageApiEndpoint
 {

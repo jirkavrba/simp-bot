@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SimpBot;
 using SimpBot.Database;
 using SimpBot.Services;
+using SimpBot.Services.ImageApi;
 
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>

@@ -8,6 +8,7 @@ using SimpBot.Exceptions;
 using SimpBot.Extensions;
 using SimpBot.Models;
 using SimpBot.Services;
+using SimpBot.Services.ImageApi;
 
 namespace SimpBot.Commands;
 
