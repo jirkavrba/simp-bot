@@ -20,7 +20,8 @@ public class ImageApiService
             new ShibaApiEndpoint(),
             new DucksApiEndpoint(),
             new WaifuApiEndpoint(),
-            new PandasApiEndpoint()
+            new PandasApiEndpoint(),
+            new RacoonsApiEndpoint()
         };
     }
 
