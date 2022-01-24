@@ -73,12 +73,13 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
     {
         await Context.Channel.TriggerTypingAsync();
         
+        var nsfwEnabled = await CheckEnabledNsfw();
+        
         try
         {
             var endpoint = _api.FindEndpoint(name);
-            var enabled = await CheckNsfwEndpoint(endpoint);
-
-            if (!enabled)
+            
+            if (endpoint.IsNsfw && !nsfwEnabled)
             {
                 await Context.ReplyErrorAsync(
                     "Sorry, this endpoint is NSFW.",
@@ -109,6 +110,7 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
         catch (ImageEndpointNotFoundException)
         {
             var endpoints = string.Join('\n', _api.Endpoints
+                .Where(e => !e.IsNsfw || nsfwEnabled)
                 .Select(e => e.Names)
                 .Select(e => e.Select(n => $"**{n}**"))
                 .Select(e => "• " + string.Join(", ", e))
@@ -121,9 +123,9 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
         }
     }
 
-    private async Task<bool> CheckNsfwEndpoint(ImageApiEndpoint endpoint)
+    private async Task<bool> CheckEnabledNsfw()
     {
-        if (!endpoint.IsNsfw || Context.Guild == null)
+        if (Context.Guild == null)
         {
             return true;
         }
