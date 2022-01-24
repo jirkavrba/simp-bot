@@ -8,8 +8,6 @@ public class FoxApiEndpoint : ImageApiEndpoint
 
     public override string Url => "https://randomfox.ca/floof/";
 
-    public virtual uint Color => 0xFC7B03;
-
     public override async Task<string?> ExtractImageUrlAsync(HttpResponseMessage response)
     {
         var data = await response.Content.ReadFromJsonAsync<IDictionary<string, string>>();

@@ -2,13 +2,13 @@ using System.Net.Http.Json;
 
 namespace SimpBot.Services.ImageApi.Endpoints;
 
-public class WaifuApiEndpoint : ImageApiEndpoint
+public class NsfwWaifuApiEndpoint : ImageApiEndpoint
 {
-    public override IEnumerable<string> Names { get; } = new[] {"waifu", "waifus"};
+    public override IEnumerable<string> Names { get; } = new[] {"nsfwaifu", "nsfwaifus", "hentai"};
 
-    public override string Url => "https://api.waifu.pics/sfw/waifu";
+    public override string Url => "https://api.waifu.pics/nsfw/waifu";
 
-    public override bool IsNsfw => false;
+    public override bool IsNsfw => true;
     
     public override async Task<string?> ExtractImageUrlAsync(HttpResponseMessage response)
     {
