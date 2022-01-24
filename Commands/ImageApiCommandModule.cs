@@ -128,13 +128,6 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
             return true;
         }
 
-        // Using nsfw endpoint in a sfw channel
-        var channel = Context.Guild.GetTextChannel(Context.Channel.Id);
-        if (!channel.IsNsfw)
-        {
-            return false;
-        }
-
         await using var context = _factory.GetDbContext();
 
         var settings = await context.GuildSettings.Cacheable().FirstOrDefaultAsync(s => s.GuildId == Context.Guild.Id);
