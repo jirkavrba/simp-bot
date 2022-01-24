@@ -13,8 +13,8 @@ public class RequireAdminPrivilegesAttribute : PreconditionAttribute
             return PreconditionResult.FromSuccess();
         }
         
-        var configuration = services.GetRequiredService<IConfiguration>();
-        var owner = configuration.GetValue<ulong>("BotOwnerId");
+        var info = await context.Client.GetApplicationInfoAsync();
+        var owner = info.Owner.Id;
 
         // Allow execution of all commands to the bot owner
         if (context.User.Id == owner)
