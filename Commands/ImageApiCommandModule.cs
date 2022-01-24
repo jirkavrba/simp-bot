@@ -1,3 +1,4 @@
+using System.Net;
 using Discord;
 using Discord.Commands;
 using EFCoreSecondLevelCacheInterceptor;
@@ -83,28 +84,31 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
             {
                 await Context.ReplyErrorAsync(
                     "Sorry, this endpoint is NSFW.",
-                    "Either the `nsfw` feature is disabled for this guild,\n or you're using this command in a non-NSFW channel"
+                    "The `nsfw` feature flag is disabled for this guild"
                 );
                 return;
             }
-            
+
             var urls = await _api.FetchImageUrls(endpoint, count);
             
             _stats.TrackUsage("command:gib");
             _stats.TrackUsage($"endpoint:{endpoint.Names.First()}", count);
+            
+            var client = new HttpClient();
+            var attachments = await Task.WhenAll(
+                urls.Select(async url =>
+                {
+                    var stream = await client.GetStreamAsync(url);
+                    var fileName = url.Split("/").Last();
 
-            var embeds = urls.Select(
-                    url => new EmbedBuilder()
-                        .WithColor(endpoint.Color)
-                        .WithImageUrl(url)
-                        .WithFooter(endpoint.Description)
-                        .Build()
-                )
-                .ToArray();
+                    return new FileAttachment(stream, fileName, isSpoiler: endpoint.IsNsfw);
+                })
+            );
 
-            await Context.Message.ReplyAsync(
+            await Context.Channel.SendFilesAsync(
+                attachments,
                 allowedMentions: AllowedMentions.None,
-                embeds: embeds
+                messageReference: Context.Message.Reference
             );
         }
         catch (ImageEndpointNotFoundException)
