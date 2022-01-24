@@ -71,6 +71,8 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
 
     private async Task CallImageApiAsync(string name, int count)
     {
+        await Context.Channel.TriggerTypingAsync();
+        
         try
         {
             var endpoint = _api.FindEndpoint(name);
