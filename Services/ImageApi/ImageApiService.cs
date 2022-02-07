@@ -21,7 +21,8 @@ public class ImageApiService
             new DucksApiEndpoint(),
             new WaifuApiEndpoint(),
             new PandasApiEndpoint(),
-            new RacoonsApiEndpoint()
+            new RacoonsApiEndpoint(),
+            new InspirobotApiEndpoint()
         };
     }
 
