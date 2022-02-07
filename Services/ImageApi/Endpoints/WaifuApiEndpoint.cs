@@ -7,8 +7,6 @@ public class WaifuApiEndpoint : ImageApiEndpoint
     public override IEnumerable<string> Names { get; } = new[] {"waifu", "waifus"};
 
     public override string Url => "https://api.waifu.pics/sfw/waifu";
-
-    public override bool IsNsfw => false;
     
     public override async Task<string?> ExtractImageUrlAsync(HttpResponseMessage response)
     {

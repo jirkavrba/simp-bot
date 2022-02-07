@@ -13,11 +13,6 @@ public abstract class ImageApiEndpoint
     public abstract string Url { get; }
 
     /// <summary>
-    ///     Whether the endpoint should be only accessible with NSFW feature flag enabled
-    /// </summary>
-    public virtual bool IsNsfw => false;
-
-    /// <summary>
     ///     HTTP headers that should be passed within the request (eg. Api keys)
     /// </summary>
     public virtual IDictionary<string, string> Headers { get; } = new Dictionary<string, string>();

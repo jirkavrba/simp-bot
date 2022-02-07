@@ -1,8 +1,5 @@
-using System.Net;
 using Discord;
 using Discord.Commands;
-using EFCoreSecondLevelCacheInterceptor;
-using Microsoft.EntityFrameworkCore;
 using SimpBot.Attributes;
 using SimpBot.Database;
 using SimpBot.Exceptions;
@@ -19,13 +16,10 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
 
     private readonly StatsTrackingService _stats;
 
-    private readonly SimpBotDbContextFactory _factory;
-
-    public ImageApiCommandModule(ImageApiService api, StatsTrackingService stats, SimpBotDbContextFactory factory)
+    public ImageApiCommandModule(ImageApiService api, StatsTrackingService stats)
     {
         _api = api;
         _stats = stats;
-        _factory = factory;
     }
 
     [Command("image")]
@@ -74,39 +68,18 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
     {
         await Context.Channel.TriggerTypingAsync();
         
-        var nsfwEnabled = await CheckEnabledNsfw();
-        
         try
         {
             var endpoint = _api.FindEndpoint(name);
-            
-            if (endpoint.IsNsfw && !nsfwEnabled)
-            {
-                await Context.ReplyErrorAsync(
-                    "Sorry, this endpoint is NSFW.",
-                    "The `nsfw` feature flag is disabled for this guild"
-                );
-                return;
-            }
 
             var urls = await _api.FetchImageUrls(endpoint, count);
-            
+            var embeds = urls.Select(url => new EmbedBuilder().WithImageUrl(url).Build()).ToArray();
+                
             _stats.TrackUsage("command:gib");
             _stats.TrackUsage($"endpoint:{endpoint.Names.First()}", count);
             
-            var client = new HttpClient();
-            var attachments = await Task.WhenAll(
-                urls.Select(async url =>
-                {
-                    var stream = await client.GetStreamAsync(url);
-                    var fileName = url.Split("/").Last();
-
-                    return new FileAttachment(stream, fileName, isSpoiler: endpoint.IsNsfw);
-                })
-            );
-
-            await Context.Channel.SendFilesAsync(
-                attachments,
+            await Context.Channel.SendMessageAsync(
+                embeds: embeds,
                 allowedMentions: AllowedMentions.None,
                 messageReference: Context.Message.Reference
             );
@@ -114,7 +87,6 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
         catch (ImageEndpointNotFoundException)
         {
             var endpoints = string.Join('\n', _api.Endpoints
-                .Where(e => !e.IsNsfw || nsfwEnabled)
                 .Select(e => e.Names)
                 .Select(e => e.Select(n => $"**{n}**"))
                 .Select(e => "• " + string.Join(", ", e))
@@ -125,25 +97,5 @@ public class ImageApiCommandModule : ModuleBase<SocketCommandContext>
                 $"Choose one of the following:\n {endpoints}"
             );
         }
-    }
-
-    private async Task<bool> CheckEnabledNsfw()
-    {
-        if (Context.Guild == null)
-        {
-            return true;
-        }
-
-        await using var context = _factory.GetDbContext();
-
-        var settings = await context.GuildSettings.Cacheable().FirstOrDefaultAsync(s => s.GuildId == Context.Guild.Id);
-        var features = settings?.EnabledFeatures;
-
-        if (features.HasValue)
-        {
-            return (features.Value & GuildFeatureFlag.EnableNsfwImageApiEndpoints) == GuildFeatureFlag.EnableNsfwImageApiEndpoints;
-        }
-
-        return true;
     }
 }
